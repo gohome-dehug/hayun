@@ -1,0 +1,368 @@
+/* 기본 리셋 및 폰트 설정 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #008080; /* 윈도우 고전 배경색 */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* 공포 모드 배경 */
+body.horro-mode {
+    background-color: #050505 !important;
+}
+
+/* 상단 헤더 및 네비게이션 */
+header {
+    background: #c0c0c0;
+    border-bottom: 2px solid #fff;
+    padding: 8px 16px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header-logo {
+    font-weight: bold;
+    color: #000;
+}
+
+.navbar {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #000;
+    padding: 4px 10px;
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    font-size: 0.9rem;
+}
+
+.nav-item.active, .nav-item:active {
+    border-color: #808080 #fff #fff #808080;
+    background: #e0e0e0;
+}
+
+.hamburger-btn {
+    display: none;
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+
+/* 메인 창 (윈도우 박스 UI) */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.win-box {
+    width: 100%;
+    max-width: 600px;
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.win-header {
+    background: linear-gradient(90deg, #000080, #1084d0);
+    padding: 3px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+body.horro-mode .win-header {
+    background: linear-gradient(90deg, #800000, #400000) !important;
+}
+
+.win-controls {
+    display: flex;
+    gap: 2px;
+}
+
+.win-btn {
+    width: 16px;
+    height: 14px;
+    background: #c0c0c0;
+    color: #000;
+    border: 1px solid;
+    border-color: #fff #808080 #808080 #fff;
+    font-size: 10px;
+    line-height: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.win-content {
+    background: #ffffff;
+    margin: 4px;
+    padding: 20px;
+    border: 2px solid;
+    border-color: #808080 #fff #fff #808080;
+    min-height: 250px;
+    color: #000;
+}
+
+.home-center {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.home-sub {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/* 돌고래 키우기 UI (Play Lab) */
+.pet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.pet-screen {
+    width: 100%;
+    max-width: 300px;
+    background: #e6f7ff;
+    border: 2px solid #808080;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.pet-dialog {
+    background: #fff;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    min-height: 32px;
+}
+
+.dolphin-pixel {
+    font-size: 3.5rem;
+    user-select: none;
+}
+
+.black-square {
+    width: 50px;
+    height: 50px;
+    background: black;
+    margin: 0 auto;
+}
+
+.pet-stats {
+    width: 100%;
+    max-width: 300px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+
+.stat-bar-bg {
+    width: 60%;
+    height: 12px;
+    background: #e0e0e0;
+    border: 1px solid #808080;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    background: #008000;
+    width: 50%;
+    transition: width 0.3s;
+}
+
+.pet-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.pet-action-btn {
+    padding: 6px 12px;
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.pet-action-btn:active {
+    border-color: #808080 #fff #fff #808080;
+}
+
+/* 하단 작업표시줄 */
+footer {
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    padding: 3px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.start-btn {
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    padding: 2px 10px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.start-btn:active {
+    border-color: #808080 #fff #fff #808080;
+}
+
+.system-tray {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid;
+    border-color: #808080 #fff #fff #808080;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    position: relative;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.7rem;
+}
+
+.settings-popup {
+    display: none;
+    position: absolute;
+    bottom: 28px;
+    right: 0;
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    padding: 8px;
+    width: 140px;
+    font-size: 0.8rem;
+}
+
+.settings-popup.active {
+    display: block;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+}
+
+/* 공포 모드 글리치 효과 및 특수 레이어 */
+.glitch-active {
+    color: #ff0000 !important;
+    text-shadow: 1px 1px #550000;
+    font-family: monospace;
+}
+
+#black-door {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 180px;
+    background: #000;
+    border: 2px solid #333;
+    z-index: 9999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px #000;
+}
+
+#bsod-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0078d7;
+    color: white;
+    z-index: 10000;
+    padding: 10%;
+    font-family: sans-serif;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#bsod-screen h1 {
+    font-size: 5rem;
+    margin-bottom: 20px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 600px) {
+    .hamburger-btn { display: block; }
+    .navbar {
+        display: none;
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        background: #c0c0c0;
+        flex-direction: column;
+        padding: 10px;
+        border-bottom: 2px solid #808080;
+    }
+    .navbar.active { display: flex; }
+}
