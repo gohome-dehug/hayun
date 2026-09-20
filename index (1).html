@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>하윤의 바탕화면</title>
+    <!-- 레트로 감성 폰트 (NeoDunggeunmo) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/NeoDunggeunmo.woff">
+    <style>
+        @font-face {
+            font-family: 'NeoDunggeunmo';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/NeoDunggeunmo.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --main-white: #FFFFFF;
+            --soft-blue: #C6E7FF;
+            --soft-green: #76C457;
+            --win-border-dark: #848484;
+            --win-bg: rgba(255, 255, 255, 0.88);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'NeoDunggeunmo', 'Courier New', monospace, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            /* 위쪽은 넓은 하늘(C6E7FF 계열), 맨 아래는 잔디밭(76C457 계열)이 나오는 바탕화면 */
+            background: linear-gradient(to bottom, 
+                #a8d8ff 0%, 
+                #c6e7ff 50%, 
+                #e8f5e9 80%, 
+                #76c457 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* 🔴 상단 스크롤 진행 바 (유튜브 스타일) */
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 2000;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: #2563eb;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* 상단 고정 레트로 메뉴바 */
+        header {
+            position: fixed;
+            top: 4px;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--win-border-dark);
+            box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 15px;
+            gap: 12px;
+        }
+
+        /* 메뉴 버튼 스타일 (평소엔 검은색 글씨) */
+        .nav-item {
+            background: #ffffff;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            outline: none;
+        }
+
+        /* 🌟 마우스 호버 시 커지고 파란색이 되는 효과 */
+        .nav-item:hover {
+            transform: scale(1.15);
+            background-color: var(--soft-blue);
+            color: #1d4ed8;
+            border-color: #1d4ed8;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .nav-item:active {
+            transform: scale(1.05);
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        /* 메인 컨테이너 */
+        main {
+            max-width: 850px;
+            width: 90%;
+            margin: 100px auto 80px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+        }
+
+        /* 흰색 사각형 윈도우 창 */
+        .win-box {
+            background: var(--win-bg);
+            backdrop-filter: blur(6px);
+            border: 2px solid #ffffff;
+            box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.12),
+                        inset 1px 1px 0px #fff, 
+                        inset -1px -1px 0px #a0a0a0;
+            border-radius: 4px;
+            overflow: hidden;
+            scroll-margin-top: 90px;
+        }
+
+        /* 윈도우 타이틀 바 */
+        .win-header {
+            background: linear-gradient(90deg, var(--soft-blue), #9be1a0);
+            padding: 6px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #222;
+            font-weight: bold;
+            border-bottom: 1px solid #b0b0b0;
+        }
+
+        .win-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+
+        .win-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .win-btn {
+            width: 18px;
+            height: 16px;
+            background: #e0e0e0;
+            border: 1px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* 내용 영역 */
+        .win-content {
+            padding: 30px;
+            line-height: 1.8;
+        }
+
+        /* 🏠 Home 전용 중앙 정렬 스타일 */
+        .home-center {
+            text-align: center;
+            padding: 40px 10px;
+        }
+
+        .home-title {
+            font-size: 1.7rem;
+            color: #1e293b;
+            margin-bottom: 20px;
+            word-break: keep-all;
+            line-height: 1.4;
+        }
+
+        .home-sub {
+            font-size: 1.1rem;
+            color: #475569;
+            background: rgba(255, 255, 255, 0.7);
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px dashed var(--soft-green);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #1e293b;
+            border-bottom: 2px dashed var(--soft-green);
+            padding-bottom: 8px;
+        }
+
+        /* 정보 카드 스타일 */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #d1d5db;
+            padding: 18px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .card-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .card-list li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: #76C457;
+        }
+
+        /* 🌱 Growth 타임라인 스타일 */
+        .growth-timeline {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            background: #ffffff;
+            border: 1px inset #ddd;
+        }
+
+        .growth-step {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .growth-arrow {
+            color: #76C457;
+            font-size: 1.2rem;
+        }
+
+        /* 🎬 Play Lab - 도우미 키우기 다마고치 시스템 스타일 */
+        .pet-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: #f0f9ff;
+            border: 2px inset #b0c4de;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .pet-screen {
+            width: 280px;
+            height: 200px;
+            background: #e0f2fe;
+            border: 4px solid #38bdf8;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .pet-dialog {
+            position: absolute;
+            top: 10px;
+            font-size: 0.85rem;
+            background: #ffffff;
+            padding: 3px 10px;
+            border-radius: 10px;
+            border: 1px solid #0284c7;
+            color: #0369a1;
+        }
+
+        /* 🐬 도트 돌고래 캐릭터 */
+        .dolphin-canvas {
+            width: 120px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .dolphin-pixel {
+            font-size: 70px;
+            line-height: 1;
+            user-select: none;
+            filter: drop-shadow(2px 4px 0px rgba(0,0,0,0.15));
+            animation: swim 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes swim {
+            0% { transform: translateY(-5px) rotate(-3deg); }
+            100% { transform: translateY(5px) rotate(3deg); }
+        }
+
+        /* 상태바 게이지 */
+        .pet-stats {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .stat-bar-bg {
+            width: 60%;
+            height: 14px;
+            background: #e2e8f0;
+            border-radius: 7px;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            width: 70%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        #satiety-fill { background-color: #f59e0b; }
+        #cleanliness-fill { background-color: #3b82f6; }
+        #energy-fill { background-color: #10b981; }
+
+        /* 조작 버튼 그룹 */
+        .pet-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pet-action-btn {
+            background: #ffffff;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .pet-action-btn:hover {
+            background: #c6e7ff;
+            transform: translateY(-2px);
+            color: #1d4ed8;
+        }
+
+        .pet-action-btn:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+            transform: translateY(1px);
+        }
+
+        /* 풋터 (하단 상태바) */
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 2px solid var(--win-border-dark);
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .start-btn {
+            background: #e0e0e0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 3px 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1️⃣ 상단 스크롤 진행 바 -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- 2️⃣ 상단 레트로 메뉴바 -->
+    <header>
+        <nav class="navbar">
+            <button class="nav-item" onclick="scrollToSection('home')">🏠 Home</button>
+            <button class="nav-item" onclick="scrollToSection('profile')">👤 Profile</button>
+            <button class="nav-item" onclick="scrollToSection('projects')">💻 Projects/Skills</button>
+            <button class="nav-item" onclick="scrollToSection('growth')">🌱 Growth</button>
+            <button class="nav-item" onclick="scrollToSection('playlab')">🎬 Play Lab</button>
+            <button class="nav-item" onclick="scrollToSection('contact')">✉ Contact</button>
+        </nav>
+    </header>
+
+    <!-- 3️⃣ 메인 바탕화면 섹션들 -->
+    <main>
+        <!-- 🏠 Home -->
+        <section id="home" class="win-box">
+            <div class="win-header">
+                <div class="win-title">💾 C:\Hayoon\Desktop\Welcome.exe</div>
+                <div class="win-controls">
+                    <div class="win-btn">_</div>
+                    <div class="win-btn">□</div>
+                    <div class="win-btn">X</div>
+                </div>
+            </div>
+            <div class="win-content home-center">
+                <h1 class="home-title">바탕화면에 오신것을 환영합니다<br>무엇이 궁금하신가요?</h1>
+                <div class="home-sub">
+                    하윤의 자기소개가 있는 개인 컴퓨터 입니다!
+                </div>
+            </div>
+        </section>
+
+        <!-- 👤 Profile -->
+        <section id="profile" class="win-box">
+            <div class="win-header">
+                <div class="win-title">👤 C:\Hayoon\Profile.txt</div>
+                <div class="win-controls"><div class="win-btn">X</div></div>
+            </div>
+            <div class="win-content">
+                <h2>👤 Profile</h2>
+                <div class="card">
+                    <ul class="card-list">
+                        <li><b>이름:</b> 권하윤</li>
+                        <li><b>소속:</b> 고등학교 2학년 재학중</li>
+                        <li><b>관심분야:</b> 개발, AI, 게임, 기획</li>
+                        <li><b>취미:</b> 글쓰기, 그림그리기</li>
+                        <li><b>장점:</b> 성실함</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 💻 Projects/Skills -->
+        <section id="projects" class="win-box">
+            <div class="win-header">
+                <div class="win-title">💻 C:\Hayoon\Projects_And_Skills.dll</div>
+                <div class="win-controls"><div class="win-btn">X</div></div>
+            </div>
+            <div class="win-content">
+                <h2>💻 Projects / Skills</h2>
+                <div class="card">
+                    <ul class="card-list">
+                        <li><b>아두이노를 이용한 게임 개발</b> (방탈출, 과일악기, 미로찾기 등)</li>
+                        <li><b>자율주행 자동차 제작</b></li>
+                        <li><b>분리수거 시뮬레이션 사이트 제작 및 커뮤니티 제작</b></li>
+                        <li><b>스마트 시티 제작</b></li>
+                        <li><b>에어로젤을 이용한 패드 제작 및 단열압력 자체 개발</b></li>
+                        <li><b>Unity 3D를 이용한 시뮬레이션 제작</b> 등</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🌱 Growth -->
+        <section id="growth" class="win-box">
+            <div class="win-header">
+                <div class="win-title">🌱 C:\Hayoon\Growth.log</div>
+                <div class="win-controls"><div class="win-btn">X</div></div>
+            </div>
+            <div class="win-content">
+                <h2>🌱 Growth</h2>
+                <div class="card">
+                    <div class="growth-timeline">
+                        <div class="growth-step">초등학교</div>
+                        <div class="growth-arrow">➔</div>
+                        <div class="growth-step">중학교</div>
+                        <div class="growth-arrow">➔</div>
+                        <div class="growth-step" style="color: #1d4ed8;">고등학교 (재학)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎬 Play Lab (실제 동작하는 돌고래 다마고치 시스템) -->
+        <section id="playlab" class="win-box">
+            <div class="win-header">
+                <div class="win-title">🎬 C:\Hayoon\PlayLab_DolphinHelper.exe</div>
+                <div class="win-controls"><div class="win-btn">X</div></div>
+            </div>
+            <div class="win-content">
+                <h2>🎬 Play Lab</h2>
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <b>🐬 컴퓨터 도우미 (돌고래) 키우기</b>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 4px;">먹이를 주고, 씻겨주고, 재워주며 돌고래 도우미를 관리해주세요!</p>
+                </div>
+
+                <div class="pet-container">
+                    <!-- 도우미 화면 -->
+                    <div class="pet-screen">
+                        <div id="pet-dialog" class="pet-dialog">큐우-! 안녕!</div>
+                        <div class="dolphin-canvas">
+                            <div id="dolphin-char" class="dolphin-pixel">🐬</div>
+                        </div>
+                    </div>
+
+                    <!-- 상태 창 게이지 -->
+                    <div class="pet-stats">
+                        <div class="stat-row">
+                            <span>🐟 배부름 (포만감)</span>
+                            <div class="stat-bar-bg"><div id="satiety-fill" class="stat-bar-fill"></div></div>
+                        </div>
+                        <div class="stat-row">
+                            <span>🧼 청결도</span>
+                            <div class="stat-bar-bg"><div id="cleanliness-fill" class="stat-bar-fill"></div></div>
+                        </div>
+                        <div class="stat-row">
+                            <span>💤 체력 (수면)</span>
+                            <div class="stat-bar-bg"><div id="energy-fill" class="stat-bar-fill"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- 조작 버튼 -->
+                    <div class="pet-controls">
+                        <button class="pet-action-btn" onclick="feedPet()">🐟 먹이주기</button>
+                        <button class="pet-action-btn" onclick="cleanPet()">🧼 씻기기</button>
+                        <button class="pet-action-btn" onclick="sleepPet()">💤 재우기</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✉ Contact -->
+        <section id="contact" class="win-box">
+            <div class="win-header">
+                <div class="win-title">✉ C:\Hayoon\Contact.msg</div>
+                <div class="win-controls"><div class="win-btn">X</div></div>
+            </div>
+            <div class="win-content">
+                <h2>✉ Contact</h2>
+                <div class="card">
+                    <p style="margin-bottom: 10px;"><b>📱 Phone:</b> 010 - 6333 - 6770</p>
+                    <p><b>📧 Email:</b> khy01063336770@com</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 하단 윈도우 상태바 -->
+    <footer>
+        <div class="start-btn">
+            <span>☁️</span> 시작 (Start)
+        </div>
+        <div>
+            <span>Hayoon Desktop OS v2.0 | <span id="clock">00:00 AM</span></span>
+        </div>
+    </footer>
+
+    <script>
+        // 1. 자동 스크롤 함수
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 2. 상단 스크롤 진행 바
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // 3. 디지털 시계
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('clock').innerText = hours + ':' + minutes + ' ' + ampm;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 4. 🐬 도우미 키우기 (다마고치 인터랙션 로직)
+        let petStats = {
+            satiety: 70,
+            cleanliness: 60,
+            energy: 80
+        };
+
+        function updatePetUI() {
+            document.getElementById('satiety-fill').style.width = petStats.satiety + '%';
+            document.getElementById('cleanliness-fill').style.width = petStats.cleanliness + '%';
+            document.getElementById('energy-fill').style.width = petStats.energy + '%';
+        }
+
+        function setPetDialog(text, emoji = "🐬") {
+            const dialog = document.getElementById('pet-dialog');
+            const char = document.getElementById('dolphin-char');
+            dialog.innerText = text;
+            char.innerText = emoji;
+            setTimeout(() => {
+                char.innerText = "🐬";
+            }, 1500);
+        }
+
+        function feedPet() {
+            petStats.satiety = Math.min(100, petStats.satiety + 25);
+            updatePetUI();
+            setPetDialog("냠냠! 맛있는 물고기 고마워! 🐟", "🐬");
+        }
+
+        function cleanPet() {
+            petStats.cleanliness = Math.min(100, petStats.cleanliness + 30);
+            updatePetUI();
+            setPetDialog("뽀득뽀득! 몸이 깨끗해졌어~ 🫧", "💦");
+        }
+
+        function sleepPet() {
+            petStats.energy = Math.min(100, petStats.energy + 35);
+            updatePetUI();
+            setPetDialog("쿨쿨... 체력이 회복되었어! 💤", "😴");
+        }
+
+        // 시간에 따른 자연 감소
+        setInterval(() => {
+            petStats.satiety = Math.max(0, petStats.satiety - 2);
+            petStats.cleanliness = Math.max(0, petStats.cleanliness - 1);
+            petStats.energy = Math.max(0, petStats.energy - 1);
+            updatePetUI();
+        }, 3000);
+
+        updatePetUI();
+    </script>
+</body>
+</html>
