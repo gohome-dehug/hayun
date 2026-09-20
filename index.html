@@ -38,7 +38,6 @@
             overflow-x: hidden;
             transition: background 1.5s ease, color 1.5s ease;
             position: relative;
-            padding-bottom: 50px; /* 푸터를 위한 여백 */
         }
 
         /* 👁️ 배경 형체 (Shadow Entity) */
@@ -148,7 +147,6 @@
             font-size: 1rem;
         }
 
-        /* 햄버거 버튼 (기본 숨김 -> 모바일 노출) */
         .hamburger-btn {
             display: none;
             background: #ffffff;
@@ -208,46 +206,10 @@
             border-color: #ef4444;
         }
 
-        /* 📱 모바일 반응형 스타일 */
-        @media (max-width: 768px) {
-            .hamburger-btn {
-                display: block;
-            }
-
-            .navbar {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                background: rgba(255, 255, 255, 0.98);
-                border-bottom: 2px solid var(--win-border-dark);
-                padding: 10px;
-                gap: 6px;
-                box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
-            }
-
-            body.horro-mode .navbar {
-                background: rgba(10, 10, 12, 0.98);
-                border-bottom: 2px solid #7f1d1d;
-            }
-
-            .navbar.active {
-                display: flex;
-            }
-
-            .nav-item {
-                width: 100%;
-                justify-content: flex-start;
-                padding: 10px;
-            }
-        }
-
         main {
             max-width: 850px;
             width: 90%;
-            margin: 70px auto 40px auto;
+            margin: 70px auto 70px auto;
             display: flex;
             flex-direction: column;
             gap: 60px;
@@ -581,20 +543,21 @@
 
         body.horro-mode .pet-action-btn:hover { background: #7f1d1d; color: #ffffff; }
 
-        /* 🔻 고정 해제된 일반 스크롤 푸터 */
+        /* 💻 데스크톱 기본 푸터 (하단 고정) */
         footer {
             background: rgba(255, 255, 255, 0.95);
             border-top: 2px solid var(--win-border-dark);
-            padding: 10px 20px;
+            padding: 8px 20px;
             font-size: 0.85rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative; /* 화면 아래 고정 대신 페이지 맨 밑에 배치 */
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
             z-index: 1000;
             transition: all 1.5s ease;
-            margin-top: auto;
         }
 
         body.horro-mode footer {
@@ -623,7 +586,6 @@
             border-color: #7f1d1d;
         }
 
-        /* ⚙️ 설정 창 스타일 */
         .system-tray {
             display: flex;
             align-items: center;
@@ -672,7 +634,53 @@
             font-size: 0.8rem;
         }
 
-        /* 🚪 검은 문 (모든 창이 닫혔을 때) */
+        /* 📱 모바일 반응형 분기 (768px 이하) */
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: block; /* 모바일에서 햄버거 버튼 보임 */
+            }
+
+            .navbar {
+                display: none; /* 상단 메뉴 숨김 */
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background: rgba(255, 255, 255, 0.98);
+                border-bottom: 2px solid var(--win-border-dark);
+                padding: 10px;
+                gap: 6px;
+                box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+            }
+
+            body.horro-mode .navbar {
+                background: rgba(10, 10, 12, 0.98);
+                border-bottom: 2px solid #7f1d1d;
+            }
+
+            .navbar.active {
+                display: flex; /* 햄버거 클릭 시 드롭다운 펼쳐짐 */
+            }
+
+            .nav-item {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 10px;
+            }
+
+            /* 모바일일 때는 푸터를 맨 아래 스크롤 위치로 변경 */
+            footer {
+                position: relative;
+                margin-top: 40px;
+            }
+
+            main {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* 🚪 검은 문 */
         #black-door {
             position: fixed;
             top: 50%;
@@ -914,7 +922,7 @@
         </section>
     </main>
 
-    <!-- 🔻 맨 아래로 스크롤해야 보이는 하단 바 -->
+    <!-- 🔻 하단 바 (데스크톱 고정 / 모바일 스크롤) -->
     <footer>
         <div class="start-btn" id="start-btn" onclick="handleStartClick()">
             <span>☁️</span> 시작 (Start)
@@ -936,7 +944,7 @@
     </footer>
 
     <script>
-        let isHorrorEnabled = false; // 기본 설정: 꺼짐
+        let isHorrorEnabled = false;
 
         function toggleNavMenu() {
             const nav = document.getElementById('nav-menu');
@@ -960,7 +968,6 @@
             if (element && element.style.display !== 'none') {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
-            // 모바일 메뉴 닫기
             document.getElementById('nav-menu').classList.remove('active');
         }
 
