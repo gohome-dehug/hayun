@@ -28,22 +28,26 @@
             font-family: 'NeoDunggeunmo', 'Courier New', monospace, sans-serif;
         }
 
-        html { 
-            scroll-behavior: smooth; 
+        html, body { 
             height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth; 
         }
 
         body {
             background: linear-gradient(to bottom, #a8d8ff 0%, #c6e7ff 50%, #e8f5e9 80%, #76c457 100%);
             background-attachment: fixed;
-            min-height: 100%;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             color: #333;
             overflow-x: hidden;
             transition: background 1.5s ease, color 1.5s ease;
             position: relative;
-            padding-bottom: 45px; /* 데스크톱 고정 푸터를 위한 공간 */
         }
 
         /* 👁️ 배경 형체 (Shadow Entity) */
@@ -103,15 +107,15 @@
             color: #fca5a5 !important;
         }
 
-        /* 1. 상단 진행 바 트랙 (채워지기 전 하얀색 처리) */
+        /* 1. 상단 진행 바 트랙 (투명도 완전히 제거한 순백색) */
         #progress-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.9); /* 투명 대신 하양으로 변경 */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: 6px;
+            background-color: #ffffff !important; /* 순백색 처리 */
+            border-bottom: 1px solid #b0b0b0;
             z-index: 2000;
         }
 
@@ -125,10 +129,10 @@
         /* 🍔 상단 네비게이션 & 햄버거 메뉴 */
         header {
             position: fixed;
-            top: 5px;
+            top: 6px;
             left: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
             border-bottom: 2px solid var(--win-border-dark);
             box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
@@ -217,13 +221,14 @@
         main {
             max-width: 850px;
             width: 90%;
-            margin: 75px auto 30px auto;
+            margin: 75px auto 0 auto; /* 하단 여백 제거 */
+            padding-bottom: 30px;
             display: flex;
             flex-direction: column;
             gap: 60px;
             position: relative;
             z-index: 2;
-            flex: 1; /* 콘텐츠 영역 확장 */
+            flex: 1; /* 본문을 확장시켜 푸터를 맨 아래로 밀어줌 */
         }
 
         .win-box {
@@ -552,7 +557,7 @@
 
         body.horro-mode .pet-action-btn:hover { background: #7f1d1d; color: #ffffff; }
 
-        /* 💻 데스크톱 전용 푸터 (화면 하단에 항상 fixed 고정) */
+        /* 🔻 하단 바 기본 스타일 (기본 fixed 고정) */
         footer {
             background: rgba(255, 255, 255, 0.95);
             border-top: 2px solid var(--win-border-dark);
@@ -567,6 +572,13 @@
             width: 100%;
             z-index: 1000;
             transition: background 1.5s ease;
+        }
+
+        /* 📱 모바일 배치 전용 클래스 (스크롤 맨 아래 밀착) */
+        footer.footer-mobile-mode {
+            position: relative !important;
+            margin-top: auto !important;
+            bottom: auto !important;
         }
 
         body.horro-mode footer {
@@ -619,10 +631,10 @@
             border: 2px solid #848484;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
             padding: 12px;
-            width: 220px;
+            width: 240px;
             display: none;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             z-index: 1100;
         }
 
@@ -643,12 +655,14 @@
             font-size: 0.8rem;
         }
 
-        /* 📱 2, 3번 해결: 모바일 전용 반응형 분기 (768px 이하) */
-        @media (max-width: 768px) {
-            body {
-                padding-bottom: 0; /* 모바일에서는 하단 패딩 제거 */
-            }
+        .setting-row select {
+            font-size: 0.75rem;
+            padding: 2px 4px;
+            border: 1px solid #848484;
+        }
 
+        /* 📱 반응형 화면 분기 (768px 이하 자동 감지) */
+        @media (max-width: 768px) {
             .hamburger-btn {
                 display: block; /* 햄버거 버튼 표시 */
             }
@@ -680,17 +694,6 @@
                 width: 100%;
                 justify-content: flex-start;
                 padding: 10px;
-            }
-
-            /* 모바일일 때 하단바를 스크롤 맨 아래에 밀착 고정 */
-            footer {
-                position: relative; /* fixed 해제 */
-                margin-top: auto; /* 페이지 맨 아래로 부드럽게 밀어붙임 */
-                width: 100%;
-            }
-
-            main {
-                margin-bottom: 40px;
             }
         }
 
@@ -781,7 +784,7 @@
         <p style="font-size: 13px; opacity: 0.8; margin-top: 30px;">(화면을 클릭하면 시스템을 복구합니다)</p>
     </div>
 
-    <!-- 1. 배경을 하얀색으로 수정한 진행바 -->
+    <!-- 1. 배경을 순백색으로 수정한 진행바 -->
     <div id="progress-container">
         <div id="progress-bar"></div>
     </div>
@@ -937,8 +940,8 @@
         </section>
     </main>
 
-    <!-- 🔻 반응형 하단 바 (데스크톱: 화면하단 fixed / 모바일: 맨 아래로 이동) -->
-    <footer>
+    <!-- 🔻 반응형 / 수동선택 지원 하단 바 -->
+    <footer id="main-footer">
         <div class="start-btn" id="start-btn" onclick="handleStartClick()">
             <span>☁️</span> 시작 (Start)
         </div>
@@ -949,7 +952,18 @@
 
             <!-- ⚙️ 설정 창 -->
             <div id="settings-popup" class="settings-popup">
-                <div style="font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 6px;">⚙️ 환경 설정</div>
+                <div style="font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">⚙️ 환경 설정</div>
+                
+                <!-- 레이아웃 모드 수동 변경 옵션 -->
+                <div class="setting-row">
+                    <span>화면 레이아웃 모드</span>
+                    <select id="layout-select" onchange="changeLayoutMode(this.value)">
+                        <option value="auto">자동 감지</option>
+                        <option value="desktop">데스크톱 (하단 고정)</option>
+                        <option value="mobile">모바일 (맨 아래 배치)</option>
+                    </select>
+                </div>
+
                 <div class="setting-row">
                     <span>돌고래 흑화 이벤트</span>
                     <input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)">
@@ -970,6 +984,34 @@
             const popup = document.getElementById('settings-popup');
             popup.classList.toggle('active');
         }
+
+        // 레이아웃 모드 직접 변경 함수
+        function changeLayoutMode(mode) {
+            const footer = document.getElementById('main-footer');
+            if (mode === 'mobile') {
+                footer.classList.add('footer-mobile-mode');
+            } else if (mode === 'desktop') {
+                footer.classList.remove('footer-mobile-mode');
+            } else {
+                // 자동 감지
+                applyAutoLayout();
+            }
+        }
+
+        function applyAutoLayout() {
+            const footer = document.getElementById('main-footer');
+            const selectVal = document.getElementById('layout-select').value;
+            if (selectVal !== 'auto') return;
+
+            if (window.innerWidth <= 768) {
+                footer.classList.add('footer-mobile-mode');
+            } else {
+                footer.classList.remove('footer-mobile-mode');
+            }
+        }
+
+        window.addEventListener('resize', applyAutoLayout);
+        applyAutoLayout();
 
         function toggleHorrorSetting(enabled) {
             isHorrorEnabled = enabled;
