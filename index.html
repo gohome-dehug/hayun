@@ -28,16 +28,22 @@
             font-family: 'NeoDunggeunmo', 'Courier New', monospace, sans-serif;
         }
 
-        html { scroll-behavior: smooth; }
+        html { 
+            scroll-behavior: smooth; 
+            height: 100%;
+        }
 
         body {
             background: linear-gradient(to bottom, #a8d8ff 0%, #c6e7ff 50%, #e8f5e9 80%, #76c457 100%);
             background-attachment: fixed;
-            min-height: 100vh;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
             color: #333;
             overflow-x: hidden;
             transition: background 1.5s ease, color 1.5s ease;
             position: relative;
+            padding-bottom: 45px; /* 데스크톱 고정 푸터를 위한 공간 */
         }
 
         /* 👁️ 배경 형체 (Shadow Entity) */
@@ -97,13 +103,15 @@
             color: #fca5a5 !important;
         }
 
+        /* 1. 상단 진행 바 트랙 (채워지기 전 하얀색 처리) */
         #progress-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
+            height: 5px;
+            background: rgba(255, 255, 255, 0.9); /* 투명 대신 하양으로 변경 */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             z-index: 2000;
         }
 
@@ -117,7 +125,7 @@
         /* 🍔 상단 네비게이션 & 햄버거 메뉴 */
         header {
             position: fixed;
-            top: 4px;
+            top: 5px;
             left: 0;
             width: 100%;
             background: rgba(255, 255, 255, 0.9);
@@ -209,12 +217,13 @@
         main {
             max-width: 850px;
             width: 90%;
-            margin: 70px auto 70px auto;
+            margin: 75px auto 30px auto;
             display: flex;
             flex-direction: column;
             gap: 60px;
             position: relative;
             z-index: 2;
+            flex: 1; /* 콘텐츠 영역 확장 */
         }
 
         .win-box {
@@ -226,7 +235,7 @@
                         inset -1px -1px 0px #a0a0a0;
             border-radius: 4px;
             overflow: hidden;
-            scroll-margin-top: 70px;
+            scroll-margin-top: 75px;
             transition: all 1.5s ease;
         }
 
@@ -543,7 +552,7 @@
 
         body.horro-mode .pet-action-btn:hover { background: #7f1d1d; color: #ffffff; }
 
-        /* 💻 데스크톱 기본 푸터 (하단 고정) */
+        /* 💻 데스크톱 전용 푸터 (화면 하단에 항상 fixed 고정) */
         footer {
             background: rgba(255, 255, 255, 0.95);
             border-top: 2px solid var(--win-border-dark);
@@ -557,7 +566,7 @@
             left: 0;
             width: 100%;
             z-index: 1000;
-            transition: all 1.5s ease;
+            transition: background 1.5s ease;
         }
 
         body.horro-mode footer {
@@ -634,14 +643,18 @@
             font-size: 0.8rem;
         }
 
-        /* 📱 모바일 반응형 분기 (768px 이하) */
+        /* 📱 2, 3번 해결: 모바일 전용 반응형 분기 (768px 이하) */
         @media (max-width: 768px) {
+            body {
+                padding-bottom: 0; /* 모바일에서는 하단 패딩 제거 */
+            }
+
             .hamburger-btn {
-                display: block; /* 모바일에서 햄버거 버튼 보임 */
+                display: block; /* 햄버거 버튼 표시 */
             }
 
             .navbar {
-                display: none; /* 상단 메뉴 숨김 */
+                display: none;
                 flex-direction: column;
                 width: 100%;
                 position: absolute;
@@ -660,7 +673,7 @@
             }
 
             .navbar.active {
-                display: flex; /* 햄버거 클릭 시 드롭다운 펼쳐짐 */
+                display: flex;
             }
 
             .nav-item {
@@ -669,14 +682,15 @@
                 padding: 10px;
             }
 
-            /* 모바일일 때는 푸터를 맨 아래 스크롤 위치로 변경 */
+            /* 모바일일 때 하단바를 스크롤 맨 아래에 밀착 고정 */
             footer {
-                position: relative;
-                margin-top: 40px;
+                position: relative; /* fixed 해제 */
+                margin-top: auto; /* 페이지 맨 아래로 부드럽게 밀어붙임 */
+                width: 100%;
             }
 
             main {
-                margin-bottom: 20px;
+                margin-bottom: 40px;
             }
         }
 
@@ -767,6 +781,7 @@
         <p style="font-size: 13px; opacity: 0.8; margin-top: 30px;">(화면을 클릭하면 시스템을 복구합니다)</p>
     </div>
 
+    <!-- 1. 배경을 하얀색으로 수정한 진행바 -->
     <div id="progress-container">
         <div id="progress-bar"></div>
     </div>
@@ -922,7 +937,7 @@
         </section>
     </main>
 
-    <!-- 🔻 하단 바 (데스크톱 고정 / 모바일 스크롤) -->
+    <!-- 🔻 반응형 하단 바 (데스크톱: 화면하단 fixed / 모바일: 맨 아래로 이동) -->
     <footer>
         <div class="start-btn" id="start-btn" onclick="handleStartClick()">
             <span>☁️</span> 시작 (Start)
