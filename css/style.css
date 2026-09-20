@@ -1,0 +1,85 @@
+@font-face {
+  font-family: 'NeoDunggeunmo';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/NeoDunggeunmo.woff') format('woff');
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'NeoDunggeunmo', monospace;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #008080; /* 레트로 윈도우 배경색 */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 상단 네비게이션 바 */
+.retro-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.retro-nav a {
+  padding: 8px 16px;
+  background: #c0c0c0;
+  color: #000;
+  text-decoration: none;
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+}
+
+.retro-nav a.active {
+  font-weight: bold;
+  background: #e0e0e0;
+  border: 2px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* 윈도우 창 스타일 */
+.window {
+  background: #c0c0c0;
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.title-bar {
+  background: navy;
+  color: white;
+  padding: 4px 8px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.window-body {
+  padding: 20px;
+}
+
+/* 레트로 버튼 */
+.retro-btn {
+  padding: 6px 12px;
+  background: #c0c0c0;
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  cursor: pointer;
+}
+
+.retro-btn:active {
+  border: 2px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
