@@ -1,280 +1,32 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Lab - 하윤의 바탕화면</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>MY RETRO OS - PLAY LAB</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="bg-entity"></div>
 
-    <header>
-        <div class="header-container">
-            <div class="header-logo">💻 Hayoon OS</div>
-            <button class="hamburger-btn" onclick="toggleNavMenu()">☰</button>
-            <nav class="navbar" id="nav-menu">
-                <a href="index.html" class="nav-item">🏠 Home</a>
-                <a href="profile.html" class="nav-item">👤 Profile</a>
-                <a href="projects.html" class="nav-item">💻 Projects</a>
-                <a href="growth.html" class="nav-item">🌱 Growth</a>
-                <a href="playlab.html" class="nav-item active">🎬 Play Lab</a>
-                <a href="contact.html" class="nav-item">✉ Contact</a>
-            </nav>
-        </div>
-    </header>
+  <nav class="retro-nav">
+    <a href="index.html">Home</a>
+    <a href="profile.html">Profile</a>
+    <a href="projects.html">Projects</a>
+    <a href="playlab.html" class="active">Play Lab</a>
+  </nav>
 
-    <main>
-        <section class="win-box">
-            <div class="win-header">
-                <div class="win-title">🎬 DolphinHelper.exe</div>
-                <div class="win-controls"><div class="win-btn close-btn" onclick="closePage()">X</div></div>
-            </div>
-            <div class="win-content">
-                <h2 class="glitch-target" data-original="🎬 Play Lab">🎬 Play Lab</h2>
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <b class="glitch-target" data-original="🐬 컴퓨터 도우미 (돌고래) 키우기">🐬 컴퓨터 도우미 (돌고래) 키우기</b>
-                    <p style="font-size: 0.85rem; color: #666; margin-top: 4px;" id="pet-guide" class="glitch-target" data-original="먹이를 주고, 씻겨주고, 재워주며 돌고래 도우미를 관리해주세요!">먹이를 주고, 씻겨주고, 재워주며 돌고래 도우미를 관리해주세요!</p>
-                </div>
+  <main class="window">
+    <div class="title-bar">
+      <span>C:\GAMES\TAMAGOTCHI.EXE</span>
+    </div>
+    <div class="window-body">
+      <h2>🐬 돌고래 키우기</h2>
+      <div style="margin: 15px 0;">
+        <p>배부름: <span id="hunger-val">50</span>%</p>
+      </div>
+      <button class="retro-btn" id="feed-btn">먹이주기 (+10)</button>
+    </div>
+  </main>
 
-                <div class="pet-container">
-                    <div class="pet-screen">
-                        <div id="pet-dialog" class="pet-dialog">큐우-! 안녕!</div>
-                        <div class="dolphin-canvas">
-                            <div id="dolphin-char" class="dolphin-pixel">🐬</div>
-                        </div>
-                    </div>
-
-                    <div class="pet-stats">
-                        <div class="stat-row">
-                            <span class="glitch-target" data-original="🐟 배부름">🐟 배부름</span>
-                            <div class="stat-bar-bg"><div id="satiety-fill" class="stat-bar-fill"></div></div>
-                        </div>
-                        <div class="stat-row">
-                            <span class="glitch-target" data-original="🧼 청결도">🧼 청결도</span>
-                            <div class="stat-bar-bg"><div id="cleanliness-fill" class="stat-bar-fill"></div></div>
-                        </div>
-                        <div class="stat-row">
-                            <span class="glitch-target" data-original="💤 체력">💤 체력</span>
-                            <div class="stat-bar-bg"><div id="energy-fill" class="stat-bar-fill"></div></div>
-                        </div>
-                    </div>
-
-                    <div class="pet-controls">
-                        <button class="pet-action-btn" onclick="feedPet()">🐟 먹이주기</button>
-                        <button class="pet-action-btn" onclick="cleanPet()">🧼 씻기기</button>
-                        <button class="pet-action-btn" onclick="sleepPet()">💤 재우기</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer id="main-footer">
-        <div class="start-btn" id="start-btn" onclick="handleStartClick()">
-            <span>☁️</span> 시작 (Start)
-        </div>
-        <div class="system-tray">
-            <button class="settings-btn" onclick="toggleSettings()">▲</button>
-            <span id="clock">00:00 AM</span>
-            <div id="settings-popup" class="settings-popup">
-                <div style="font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">⚙️ 환경 설정</div>
-                <div class="setting-row">
-                    <span>공포 모드</span>
-                    <input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)">
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        let isHorrorEnabled = localStorage.getItem('horrorEnabled') === 'true';
-        let isHorrorMode = localStorage.getItem('horrorMode') === 'true';
-        let restartClickCount = parseInt(localStorage.getItem('restartClickCount') || '0', 10);
-        let petStats = JSON.parse(localStorage.getItem('petStats')) || { satiety: 20, cleanliness: 20, energy: 20 };
-
-        const glitchChars = "̷̶̵̶̸̶̵̷̸̷̶̵̸̸̷̷̷̸̷̷01#%&*@!$/\\";
-        const horrorBaseDialogs = [
-            "왜 나를 방치했어...",
-            "빛이 닿지 않는 곳으로...",
-            "너도 나와 함께 깊은 곳으로...",
-            "너 뒤에 누군가 서있어...",
-            "눈을 감아도 널 보고 있어..."
-        ];
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const toggleHorror = document.getElementById('toggle-horror');
-            if (toggleHorror) toggleHorror.checked = isHorrorEnabled;
-            if (isHorrorMode) applyHorrorUI();
-            updatePetUI();
-            updateClock();
-            setInterval(updateClock, 1000);
-            setInterval(decreasePetStats, 2000);
-        });
-
-        function toggleHorrorSetting(enabled) {
-            isHorrorEnabled = enabled;
-            localStorage.setItem('horrorEnabled', enabled);
-            if (!enabled && isHorrorMode) resetToNormal();
-        }
-
-        function updateClock() {
-            const clock = document.getElementById('clock');
-            if (!clock) return;
-            const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            clock.innerText = `${hours}:${minutes} ${ampm}`;
-        }
-
-        function makeGlitchedText(text) {
-            let result = "";
-            for (let i = 0; i < text.length; i++) {
-                result += Math.random() > 0.4 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : text[i];
-            }
-            return result;
-        }
-
-        function decreasePetStats() {
-            if (!isHorrorMode && isHorrorEnabled) {
-                petStats.satiety = Math.max(0, petStats.satiety - 5);
-                petStats.cleanliness = Math.max(0, petStats.cleanliness - 5);
-                petStats.energy = Math.max(0, petStats.energy - 5);
-                savePetStats();
-                updatePetUI();
-
-                if (petStats.satiety <= 0 && petStats.cleanliness <= 0 && petStats.energy <= 0) {
-                    triggerHorrorMode();
-                }
-            }
-        }
-
-        function savePetStats() {
-            localStorage.setItem('petStats', JSON.stringify(petStats));
-        }
-
-        function updatePetUI() {
-            const sFill = document.getElementById('satiety-fill');
-            const cFill = document.getElementById('cleanliness-fill');
-            const eFill = document.getElementById('energy-fill');
-            if (sFill) sFill.style.width = petStats.satiety + '%';
-            if (cFill) cFill.style.width = petStats.cleanliness + '%';
-            if (eFill) eFill.style.width = petStats.energy + '%';
-        }
-
-        function triggerHorrorMode() {
-            isHorrorMode = true;
-            localStorage.setItem('horrorMode', 'true');
-            applyHorrorUI();
-        }
-
-        function applyHorrorUI() {
-            document.body.classList.add('horro-mode');
-            const char = document.getElementById('dolphin-char');
-            if (char) {
-                char.innerText = "";
-                char.classList.add('black-square');
-            }
-            document.querySelectorAll('.glitch-target').forEach(el => {
-                const orig = el.getAttribute('data-original');
-                if (orig) {
-                    el.innerText = makeGlitchedText(orig);
-                    el.classList.add('glitch-active');
-                }
-            });
-            setPetDialog(horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)], true);
-            updateStartButtonText();
-        }
-
-        function setPetDialog(text, isGlitch = false) {
-            const dialog = document.getElementById('pet-dialog');
-            if (!dialog) return;
-            if (isGlitch) {
-                dialog.innerText = makeGlitchedText(text);
-                dialog.classList.add('glitch-active');
-            } else {
-                dialog.innerText = text;
-                dialog.classList.remove('glitch-active');
-            }
-        }
-
-        function handleStartClick() {
-            if (!isHorrorMode) return;
-            restartClickCount++;
-            localStorage.setItem('restartClickCount', restartClickCount);
-            updateStartButtonText();
-            if (restartClickCount >= 5) {
-                resetToNormal();
-            } else {
-                setPetDialog(horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)], true);
-            }
-        }
-
-        function updateStartButtonText() {
-            const startBtn = document.getElementById('start-btn');
-            if (!startBtn) return;
-            if (isHorrorMode) {
-                startBtn.innerHTML = `<span>🔄</span> 재시작 (${5 - restartClickCount}/5)`;
-            } else {
-                startBtn.innerHTML = `<span>☁️</span> 시작 (Start)`;
-            }
-        }
-
-        function resetToNormal() {
-            isHorrorMode = false;
-            restartClickCount = 0;
-            localStorage.setItem('horrorMode', 'false');
-            localStorage.setItem('restartClickCount', '0');
-            document.body.classList.remove('horro-mode');
-            petStats = { satiety: 50, cleanliness: 50, energy: 50 };
-            savePetStats();
-            updatePetUI();
-            const char = document.getElementById('dolphin-char');
-            if (char) {
-                char.classList.remove('black-square');
-                char.innerText = "🐬";
-            }
-            document.querySelectorAll('.glitch-target').forEach(el => {
-                const orig = el.getAttribute('data-original');
-                if (orig) {
-                    el.innerHTML = orig;
-                    el.classList.remove('glitch-active');
-                }
-            });
-            setPetDialog("큐우-! 다시 원래대로 돌아왔어!", false);
-            updateStartButtonText();
-        }
-
-        function closePage() { window.location.href = "index.html"; }
-        function toggleNavMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
-        function toggleSettings() { document.getElementById('settings-popup').classList.toggle('active'); }
-
-        function feedPet() {
-            if (isHorrorMode) return;
-            petStats.satiety = Math.min(100, petStats.satiety + 25);
-            savePetStats();
-            updatePetUI();
-            setPetDialog("냠냠! 맛있는 물고기 고마워! 🐟");
-        }
-
-        function cleanPet() {
-            if (isHorrorMode) return;
-            petStats.cleanliness = Math.min(100, petStats.cleanliness + 30);
-            savePetStats();
-            updatePetUI();
-            setPetDialog("뽀득뽀득! 몸이 깨끗해졌어~ 🫧");
-        }
-
-        function sleepPet() {
-            if (isHorrorMode) return;
-            petStats.energy = Math.min(100, petStats.energy + 35);
-            savePetStats();
-            updatePetUI();
-            setPetDialog("쿨쿨... 체력이 회복되었어! 💤");
-        }
-    </script>
+  <script src="js/main.js"></script>
 </body>
 </html>
