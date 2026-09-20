@@ -87,6 +87,194 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        let isHorrorEnabled = localStorage.getItem('horrorEnabled') === 'true';
+        let isHorrorMode = localStorage.getItem('horrorMode') === 'true';
+        let restartClickCount = parseInt(localStorage.getItem('restartClickCount') || '0', 10);
+        let petStats = JSON.parse(localStorage.getItem('petStats')) || { satiety: 20, cleanliness: 20, energy: 20 };
+
+        const glitchChars = "̷̶̵̶̸̶̵̷̸̷̶̵̸̸̷̷̷̸̷̷01#%&*@!$/\\";
+        const horrorBaseDialogs = [
+            "왜 나를 방치했어...",
+            "빛이 닿지 않는 곳으로...",
+            "너도 나와 함께 깊은 곳으로...",
+            "너 뒤에 누군가 서있어...",
+            "눈을 감아도 널 보고 있어..."
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleHorror = document.getElementById('toggle-horror');
+            if (toggleHorror) toggleHorror.checked = isHorrorEnabled;
+            if (isHorrorMode) applyHorrorUI();
+            updatePetUI();
+            updateClock();
+            setInterval(updateClock, 1000);
+            setInterval(decreasePetStats, 2000);
+        });
+
+        function toggleHorrorSetting(enabled) {
+            isHorrorEnabled = enabled;
+            localStorage.setItem('horrorEnabled', enabled);
+            if (!enabled && isHorrorMode) resetToNormal();
+        }
+
+        function updateClock() {
+            const clock = document.getElementById('clock');
+            if (!clock) return;
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            clock.innerText = `${hours}:${minutes} ${ampm}`;
+        }
+
+        function makeGlitchedText(text) {
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                result += Math.random() > 0.4 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : text[i];
+            }
+            return result;
+        }
+
+        function decreasePetStats() {
+            if (!isHorrorMode && isHorrorEnabled) {
+                petStats.satiety = Math.max(0, petStats.satiety - 5);
+                petStats.cleanliness = Math.max(0, petStats.cleanliness - 5);
+                petStats.energy = Math.max(0, petStats.energy - 5);
+                savePetStats();
+                updatePetUI();
+
+                if (petStats.satiety <= 0 && petStats.cleanliness <= 0 && petStats.energy <= 0) {
+                    triggerHorrorMode();
+                }
+            }
+        }
+
+        function savePetStats() {
+            localStorage.setItem('petStats', JSON.stringify(petStats));
+        }
+
+        function updatePetUI() {
+            const sFill = document.getElementById('satiety-fill');
+            const cFill = document.getElementById('cleanliness-fill');
+            const eFill = document.getElementById('energy-fill');
+            if (sFill) sFill.style.width = petStats.satiety + '%';
+            if (cFill) cFill.style.width = petStats.cleanliness + '%';
+            if (eFill) eFill.style.width = petStats.energy + '%';
+        }
+
+        function triggerHorrorMode() {
+            isHorrorMode = true;
+            localStorage.setItem('horrorMode', 'true');
+            applyHorrorUI();
+        }
+
+        function applyHorrorUI() {
+            document.body.classList.add('horro-mode');
+            const char = document.getElementById('dolphin-char');
+            if (char) {
+                char.innerText = "";
+                char.classList.add('black-square');
+            }
+            document.querySelectorAll('.glitch-target').forEach(el => {
+                const orig = el.getAttribute('data-original');
+                if (orig) {
+                    el.innerText = makeGlitchedText(orig);
+                    el.classList.add('glitch-active');
+                }
+            });
+            setPetDialog(horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)], true);
+            updateStartButtonText();
+        }
+
+        function setPetDialog(text, isGlitch = false) {
+            const dialog = document.getElementById('pet-dialog');
+            if (!dialog) return;
+            if (isGlitch) {
+                dialog.innerText = makeGlitchedText(text);
+                dialog.classList.add('glitch-active');
+            } else {
+                dialog.innerText = text;
+                dialog.classList.remove('glitch-active');
+            }
+        }
+
+        function handleStartClick() {
+            if (!isHorrorMode) return;
+            restartClickCount++;
+            localStorage.setItem('restartClickCount', restartClickCount);
+            updateStartButtonText();
+            if (restartClickCount >= 5) {
+                resetToNormal();
+            } else {
+                setPetDialog(horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)], true);
+            }
+        }
+
+        function updateStartButtonText() {
+            const startBtn = document.getElementById('start-btn');
+            if (!startBtn) return;
+            if (isHorrorMode) {
+                startBtn.innerHTML = `<span>🔄</span> 재시작 (${5 - restartClickCount}/5)`;
+            } else {
+                startBtn.innerHTML = `<span>☁️</span> 시작 (Start)`;
+            }
+        }
+
+        function resetToNormal() {
+            isHorrorMode = false;
+            restartClickCount = 0;
+            localStorage.setItem('horrorMode', 'false');
+            localStorage.setItem('restartClickCount', '0');
+            document.body.classList.remove('horro-mode');
+            petStats = { satiety: 50, cleanliness: 50, energy: 50 };
+            savePetStats();
+            updatePetUI();
+            const char = document.getElementById('dolphin-char');
+            if (char) {
+                char.classList.remove('black-square');
+                char.innerText = "🐬";
+            }
+            document.querySelectorAll('.glitch-target').forEach(el => {
+                const orig = el.getAttribute('data-original');
+                if (orig) {
+                    el.innerHTML = orig;
+                    el.classList.remove('glitch-active');
+                }
+            });
+            setPetDialog("큐우-! 다시 원래대로 돌아왔어!", false);
+            updateStartButtonText();
+        }
+
+        function closePage() { window.location.href = "index.html"; }
+        function toggleNavMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
+        function toggleSettings() { document.getElementById('settings-popup').classList.toggle('active'); }
+
+        function feedPet() {
+            if (isHorrorMode) return;
+            petStats.satiety = Math.min(100, petStats.satiety + 25);
+            savePetStats();
+            updatePetUI();
+            setPetDialog("냠냠! 맛있는 물고기 고마워! 🐟");
+        }
+
+        function cleanPet() {
+            if (isHorrorMode) return;
+            petStats.cleanliness = Math.min(100, petStats.cleanliness + 30);
+            savePetStats();
+            updatePetUI();
+            setPetDialog("뽀득뽀득! 몸이 깨끗해졌어~ 🫧");
+        }
+
+        function sleepPet() {
+            if (isHorrorMode) return;
+            petStats.energy = Math.min(100, petStats.energy + 35);
+            savePetStats();
+            updatePetUI();
+            setPetDialog("쿨쿨... 체력이 회복되었어! 💤");
+        }
+    </script>
 </body>
 </html>
