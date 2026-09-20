@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>하윤의 바탕화면</title>
-    <!-- 레트로 감성 폰트 (NeoDunggeunmo) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/NeoDunggeunmo.woff">
     <style>
         @font-face {
@@ -29,24 +28,76 @@
             font-family: 'NeoDunggeunmo', 'Courier New', monospace, sans-serif;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body {
-            /* 위쪽은 넓은 하늘(C6E7FF 계열), 맨 아래는 잔디밭(76C457 계열)이 나오는 바탕화면 */
-            background: linear-gradient(to bottom, 
-                #a8d8ff 0%, 
-                #c6e7ff 50%, 
-                #e8f5e9 80%, 
-                #76c457 100%);
+            background: linear-gradient(to bottom, #a8d8ff 0%, #c6e7ff 50%, #e8f5e9 80%, #76c457 100%);
             background-attachment: fixed;
             min-height: 100vh;
             color: #333;
             overflow-x: hidden;
+            transition: background 1.5s ease, color 1.5s ease;
+            position: relative;
+            padding-bottom: 50px; /* 푸터를 위한 여백 */
         }
 
-        /* 🔴 상단 스크롤 진행 바 (유튜브 스타일) */
+        /* 👁️ 배경 형체 (Shadow Entity) */
+        #bg-entity {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 0, 0, 0.4) 0%, rgba(20, 0, 5, 0.8) 50%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: all 2s ease;
+            filter: blur(20px);
+        }
+
+        #bg-entity::after {
+            content: '👁️';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 120px;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 15px #ff0000);
+            animation: pulse-eye 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse-eye {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        /* 👁️ 흑화 모드 스타일 */
+        body.horro-mode {
+            background: linear-gradient(to bottom, #050508 0%, #0a0e1a 40%, #120303 80%, #000000 100%) !important;
+            color: #d1d5db;
+        }
+
+        body.horro-mode #bg-entity {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        body.horro-mode .win-box {
+            background: rgba(15, 15, 20, 0.92) !important;
+            border-color: #450a0a !important;
+            box-shadow: 0 0 25px rgba(185, 28, 28, 0.3) !important;
+            color: #ef4444;
+        }
+
+        body.horro-mode .win-header {
+            background: linear-gradient(90deg, #450a0a, #7f1d1d) !important;
+            color: #fca5a5 !important;
+        }
+
         #progress-container {
             position: fixed;
             top: 0;
@@ -64,7 +115,7 @@
             transition: width 0.1s ease-out;
         }
 
-        /* 상단 고정 레트로 메뉴바 */
+        /* 🍔 상단 네비게이션 & 햄버거 메뉴 */
         header {
             position: fixed;
             top: 4px;
@@ -75,6 +126,43 @@
             border-bottom: 2px solid var(--win-border-dark);
             box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
             z-index: 1000;
+            transition: background 1.5s ease;
+        }
+
+        body.horro-mode header {
+            background: rgba(10, 10, 12, 0.95);
+            border-bottom: 2px solid #7f1d1d;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* 햄버거 버튼 (기본 숨김 -> 모바일 노출) */
+        .hamburger-btn {
+            display: none;
+            background: #ffffff;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            font-size: 1.2rem;
+            padding: 2px 8px;
+            cursor: pointer;
+        }
+
+        body.horro-mode .hamburger-btn {
+            background: #1a1a24;
+            color: #f87171;
+            border-color: #7f1d1d;
         }
 
         .navbar {
@@ -82,18 +170,16 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            padding: 10px 15px;
-            gap: 12px;
+            gap: 8px;
         }
 
-        /* 메뉴 버튼 스타일 (평소엔 검은색 글씨) */
         .nav-item {
             background: #ffffff;
             border: 2px solid;
             border-color: #ffffff #808080 #808080 #ffffff;
-            padding: 8px 16px;
+            padding: 6px 12px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #000000;
             display: flex;
             align-items: center;
@@ -103,31 +189,72 @@
             outline: none;
         }
 
-        /* 🌟 마우스 호버 시 커지고 파란색이 되는 효과 */
         .nav-item:hover {
-            transform: scale(1.15);
+            transform: scale(1.05);
             background-color: var(--soft-blue);
             color: #1d4ed8;
             border-color: #1d4ed8;
-            box-shadow: 2px 4px 8px rgba(0,0,0,0.15);
         }
 
-        .nav-item:active {
-            transform: scale(1.05);
-            border-color: #808080 #ffffff #ffffff #808080;
+        body.horro-mode .nav-item {
+            background: #1a1a24;
+            color: #f87171;
+            border-color: #7f1d1d;
         }
 
-        /* 메인 컨테이너 */
+        body.horro-mode .nav-item:hover {
+            background: #450a0a;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+
+        /* 📱 모바일 반응형 스타일 */
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: block;
+            }
+
+            .navbar {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background: rgba(255, 255, 255, 0.98);
+                border-bottom: 2px solid var(--win-border-dark);
+                padding: 10px;
+                gap: 6px;
+                box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+            }
+
+            body.horro-mode .navbar {
+                background: rgba(10, 10, 12, 0.98);
+                border-bottom: 2px solid #7f1d1d;
+            }
+
+            .navbar.active {
+                display: flex;
+            }
+
+            .nav-item {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 10px;
+            }
+        }
+
         main {
             max-width: 850px;
             width: 90%;
-            margin: 100px auto 80px auto;
+            margin: 70px auto 40px auto;
             display: flex;
             flex-direction: column;
-            gap: 80px;
+            gap: 60px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* 흰색 사각형 윈도우 창 */
         .win-box {
             background: var(--win-bg);
             backdrop-filter: blur(6px);
@@ -137,10 +264,10 @@
                         inset -1px -1px 0px #a0a0a0;
             border-radius: 4px;
             overflow: hidden;
-            scroll-margin-top: 90px;
+            scroll-margin-top: 70px;
+            transition: all 1.5s ease;
         }
 
-        /* 윈도우 타이틀 바 */
         .win-header {
             background: linear-gradient(90deg, var(--soft-blue), #9be1a0);
             padding: 6px 12px;
@@ -150,19 +277,17 @@
             color: #222;
             font-weight: bold;
             border-bottom: 1px solid #b0b0b0;
+            transition: all 1.5s ease;
         }
 
         .win-title {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
         }
 
-        .win-controls {
-            display: flex;
-            gap: 4px;
-        }
+        .win-controls { display: flex; gap: 4px; }
 
         .win-btn {
             width: 18px;
@@ -177,108 +302,150 @@
             cursor: pointer;
         }
 
-        /* 내용 영역 */
-        .win-content {
-            padding: 30px;
-            line-height: 1.8;
+        .win-btn.close-btn:hover {
+            background: #ef4444;
+            color: white;
         }
 
-        /* 🏠 Home 전용 중앙 정렬 스타일 */
-        .home-center {
-            text-align: center;
-            padding: 40px 10px;
-        }
+        .win-content { padding: 20px; line-height: 1.8; }
+        .home-center { text-align: center; padding: 30px 10px; }
 
         .home-title {
-            font-size: 1.7rem;
+            font-size: 1.4rem;
             color: #1e293b;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             word-break: keep-all;
             line-height: 1.4;
         }
 
+        body.horro-mode .home-title {
+            color: #f87171;
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+        }
+
         .home-sub {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #475569;
             background: rgba(255, 255, 255, 0.7);
             display: inline-block;
-            padding: 8px 18px;
+            padding: 6px 14px;
             border-radius: 20px;
             border: 1px dashed var(--soft-green);
         }
 
-        h2 {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: #1e293b;
-            border-bottom: 2px dashed var(--soft-green);
-            padding-bottom: 8px;
+        body.horro-mode .home-sub {
+            background: rgba(30, 10, 10, 0.8);
+            color: #fca5a5;
+            border-color: #991b1b;
         }
 
-        /* 정보 카드 스타일 */
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #1e293b;
+            border-bottom: 2px dashed var(--soft-green);
+            padding-bottom: 6px;
+        }
+
+        body.horro-mode h2 {
+            color: #ef4444;
+            border-bottom-color: #7f1d1d;
+        }
+
         .card {
             background: rgba(255, 255, 255, 0.95);
             border: 1px solid #d1d5db;
-            padding: 18px;
+            padding: 14px;
             border-radius: 4px;
-            margin-bottom: 15px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
-        }
-
-        .card-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .card-list li {
-            position: relative;
-            padding-left: 20px;
             margin-bottom: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+            transition: all 1.5s ease;
         }
 
-        .card-list li::before {
-            content: '✦';
-            position: absolute;
-            left: 0;
-            color: #76C457;
+        body.horro-mode .card {
+            background: rgba(20, 10, 15, 0.9);
+            border-color: #7f1d1d;
+            color: #e5e7eb;
         }
 
-        /* 🌱 Growth 타임라인 스타일 */
+        .card-list { list-style: none; padding: 0; }
+        .card-list li { position: relative; padding-left: 20px; margin-bottom: 8px; font-size: 0.9rem; }
+        .card-list li::before { content: '✦'; position: absolute; left: 0; color: #76C457; }
+        body.horro-mode .card-list li::before { content: '👁️'; color: #ef4444; }
+
         .growth-timeline {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 20px 0;
+            padding: 15px 0;
             background: #ffffff;
             border: 1px inset #ddd;
+            transition: all 1.5s ease;
         }
 
-        .growth-step {
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
+        body.horro-mode .growth-timeline {
+            background: #0f0a0a;
+            border-color: #7f1d1d;
         }
 
-        .growth-arrow {
-            color: #76C457;
-            font-size: 1.2rem;
+        .growth-step { text-align: center; font-weight: bold; font-size: 0.95rem; }
+        .growth-arrow { color: #76C457; font-size: 1.1rem; }
+
+        /* ⬛ 검은 네모 스타일 */
+        .black-square {
+            width: 60px;
+            height: 60px;
+            background-color: #000000;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+            animation: glitch-square 0.3s infinite alternate !important;
         }
 
-        /* 🎬 Play Lab - 도우미 키우기 다마고치 시스템 스타일 */
+        @keyframes glitch-square {
+            0% { transform: translate(0, 0) scale(1); }
+            20% { transform: translate(-3px, 2px) scale(1.05); }
+            40% { transform: translate(3px, -2px) scale(0.95); }
+            60% { transform: translate(-2px, -3px) scale(1.02); }
+            80% { transform: translate(2px, 3px) scale(0.98); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* 텍스트 깨짐 애니메이션 */
+        @keyframes glitch-text {
+            0% { transform: skew(0deg); opacity: 1; }
+            20% { transform: skew(10deg) translate(-2px, 1px); opacity: 0.8; }
+            40% { transform: skew(-15deg) translate(2px, -1px); opacity: 0.9; }
+            60% { transform: skew(5deg) translate(-1px, -2px); opacity: 0.7; }
+            80% { transform: skew(-8deg) translate(1px, 2px); opacity: 1; }
+            100% { transform: skew(0deg); opacity: 1; }
+        }
+
+        .glitch-active {
+            animation: glitch-text 0.2s infinite;
+            display: inline-block;
+        }
+
         .pet-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             background: #f0f9ff;
             border: 2px inset #b0c4de;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
+            transition: all 1.5s ease;
+        }
+
+        body.horro-mode .pet-container {
+            background: #0a0508;
+            border-color: #7f1d1d;
         }
 
         .pet-screen {
-            width: 280px;
-            height: 200px;
+            width: 100%;
+            max-width: 280px;
+            height: 180px;
             background: #e0f2fe;
             border: 4px solid #38bdf8;
             border-radius: 12px;
@@ -288,20 +455,37 @@
             justify-content: center;
             position: relative;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            transition: all 1.5s ease;
+        }
+
+        body.horro-mode .pet-screen {
+            background: #030712;
+            border-color: #991b1b;
+            box-shadow: inset 0 0 25px rgba(220, 38, 38, 0.6);
         }
 
         .pet-dialog {
             position: absolute;
             top: 10px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             background: #ffffff;
-            padding: 3px 10px;
+            padding: 4px 10px;
             border-radius: 10px;
             border: 1px solid #0284c7;
             color: #0369a1;
+            text-align: center;
+            max-width: 90%;
+            transition: all 0.5s ease;
         }
 
-        /* 🐬 도트 돌고래 캐릭터 */
+        body.horro-mode .pet-dialog {
+            background: #180505;
+            border-color: #dc2626;
+            color: #fca5a5;
+            box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
+            font-weight: bold;
+        }
+
         .dolphin-canvas {
             width: 120px;
             height: 80px;
@@ -309,15 +493,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.3s ease;
         }
 
         .dolphin-pixel {
-            font-size: 70px;
+            font-size: 60px;
             line-height: 1;
             user-select: none;
             filter: drop-shadow(2px 4px 0px rgba(0,0,0,0.15));
             animation: swim 2.5s ease-in-out infinite alternate;
+            transition: all 0.5s ease;
         }
 
         @keyframes swim {
@@ -325,30 +509,31 @@
             100% { transform: translateY(5px) rotate(3deg); }
         }
 
-        /* 상태바 게이지 */
         .pet-stats {
             width: 100%;
             max-width: 320px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .stat-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .stat-bar-bg {
-            width: 60%;
-            height: 14px;
+            width: 55%;
+            height: 12px;
             background: #e2e8f0;
-            border-radius: 7px;
+            border-radius: 6px;
             overflow: hidden;
             border: 1px solid #cbd5e1;
         }
+
+        body.horro-mode .stat-bar-bg { background: #260505; border-color: #7f1d1d; }
 
         .stat-bar-fill {
             height: 100%;
@@ -360,10 +545,11 @@
         #cleanliness-fill { background-color: #3b82f6; }
         #energy-fill { background-color: #10b981; }
 
-        /* 조작 버튼 그룹 */
+        body.horro-mode .stat-bar-fill { background-color: #991b1b !important; }
+
         .pet-controls {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -372,12 +558,12 @@
             background: #ffffff;
             border: 2px solid;
             border-color: #ffffff #808080 #808080 #ffffff;
-            padding: 8px 16px;
-            font-size: 0.95rem;
+            padding: 6px 12px;
+            font-size: 0.85rem;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             transition: all 0.15s ease;
         }
 
@@ -387,154 +573,301 @@
             color: #1d4ed8;
         }
 
-        .pet-action-btn:active {
-            border-color: #808080 #ffffff #ffffff #808080;
-            transform: translateY(1px);
+        body.horro-mode .pet-action-btn {
+            background: #2a0808;
+            color: #fca5a5;
+            border-color: #7f1d1d;
         }
 
-        /* 풋터 (하단 상태바) */
+        body.horro-mode .pet-action-btn:hover { background: #7f1d1d; color: #ffffff; }
+
+        /* 🔻 고정 해제된 일반 스크롤 푸터 */
         footer {
             background: rgba(255, 255, 255, 0.95);
             border-top: 2px solid var(--win-border-dark);
-            padding: 8px 20px;
+            padding: 10px 20px;
             font-size: 0.85rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed;
-            bottom: 0;
+            position: relative; /* 화면 아래 고정 대신 페이지 맨 밑에 배치 */
             width: 100%;
             z-index: 1000;
+            transition: all 1.5s ease;
+            margin-top: auto;
+        }
+
+        body.horro-mode footer {
+            background: rgba(10, 10, 12, 0.95);
+            border-top: 2px solid #7f1d1d;
+            color: #f87171;
         }
 
         .start-btn {
             background: #e0e0e0;
             border: 2px solid;
             border-color: #ffffff #808080 #808080 #ffffff;
-            padding: 3px 10px;
+            padding: 4px 10px;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 6px;
             cursor: pointer;
+            user-select: none;
+            font-size: 0.85rem;
+        }
+
+        body.horro-mode .start-btn {
+            background: #2a0808;
+            color: #ef4444;
+            border-color: #7f1d1d;
+        }
+
+        /* ⚙️ 설정 창 스타일 */
+        .system-tray {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .settings-btn {
+            background: #e0e0e0;
+            border: 1px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            font-size: 10px;
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+        .settings-popup {
+            position: absolute;
+            bottom: 35px;
+            right: 0;
+            background: #ffffff;
+            border: 2px solid #848484;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            padding: 12px;
+            width: 220px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1100;
+        }
+
+        body.horro-mode .settings-popup {
+            background: #111;
+            border-color: #7f1d1d;
+            color: #ef4444;
+        }
+
+        .settings-popup.active {
+            display: flex;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        /* 🚪 검은 문 (모든 창이 닫혔을 때) */
+        #black-door {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 220px;
+            background-color: #000;
+            border: 4px solid #7f1d1d;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: door-pulse 2s infinite alternate;
+        }
+
+        #black-door::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #ff0000;
+            border-radius: 50%;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            box-shadow: 0 0 10px #ff0000;
+        }
+
+        @keyframes door-pulse {
+            0% { transform: translate(-50%, -50%) scale(0.98); box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+            100% { transform: translate(-50%, -50%) scale(1.02); box-shadow: 0 0 40px rgba(255, 0, 0, 0.9); }
+        }
+
+        /* 💻 블루스크린 연출 */
+        #bsod-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0078d7;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 10%;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        #bsod-screen h1 {
+            font-size: 60px;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        #bsod-screen p {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
 
-    <!-- 1️⃣ 상단 스크롤 진행 바 -->
+    <!-- 👁️ 배경 형체 -->
+    <div id="bg-entity"></div>
+
+    <!-- 🚪 검은 문 -->
+    <div id="black-door" onclick="triggerBSOD()" title="문 클릭">
+        <span style="color: #ef4444; font-size: 0.8rem; text-align: center;">ENTER</span>
+    </div>
+
+    <!-- 💻 블루스크린 화면 -->
+    <div id="bsod-screen" onclick="resetFromBSOD()">
+        <h1>:(</h1>
+        <p>PC에 문제가 발생하여 다시 시작해야 합니다.<br>일부 오류 정보를 수집하고 있습니다. 계속 진행할 수 있습니다.</p>
+        <p style="font-size: 14px; margin-top: 20px;">중지 코드: CRITICAL_PROCESS_DIED</p>
+        <p style="font-size: 13px; opacity: 0.8; margin-top: 30px;">(화면을 클릭하면 시스템을 복구합니다)</p>
+    </div>
+
     <div id="progress-container">
         <div id="progress-bar"></div>
     </div>
 
-    <!-- 2️⃣ 상단 레트로 메뉴바 -->
     <header>
-        <nav class="navbar">
-            <button class="nav-item" onclick="scrollToSection('home')">🏠 Home</button>
-            <button class="nav-item" onclick="scrollToSection('profile')">👤 Profile</button>
-            <button class="nav-item" onclick="scrollToSection('projects')">💻 Projects/Skills</button>
-            <button class="nav-item" onclick="scrollToSection('growth')">🌱 Growth</button>
-            <button class="nav-item" onclick="scrollToSection('playlab')">🎬 Play Lab</button>
-            <button class="nav-item" onclick="scrollToSection('contact')">✉ Contact</button>
-        </nav>
+        <div class="header-container">
+            <div class="header-logo">💻 Hayoon OS</div>
+            <!-- 모바일용 햄버거 버튼 -->
+            <button class="hamburger-btn" onclick="toggleNavMenu()">☰</button>
+            <nav class="navbar" id="nav-menu">
+                <button class="nav-item" onclick="scrollToSection('home')">🏠 Home</button>
+                <button class="nav-item" onclick="scrollToSection('profile')">👤 Profile</button>
+                <button class="nav-item" onclick="scrollToSection('projects')">💻 Projects</button>
+                <button class="nav-item" onclick="scrollToSection('growth')">🌱 Growth</button>
+                <button class="nav-item" onclick="scrollToSection('playlab')">🎬 Play Lab</button>
+                <button class="nav-item" onclick="scrollToSection('contact')">✉ Contact</button>
+            </nav>
+        </div>
     </header>
 
-    <!-- 3️⃣ 메인 바탕화면 섹션들 -->
     <main>
-        <!-- 🏠 Home -->
         <section id="home" class="win-box">
             <div class="win-header">
-                <div class="win-title">💾 C:\Hayoon\Desktop\Welcome.exe</div>
+                <div class="win-title">💾 Welcome.exe</div>
                 <div class="win-controls">
                     <div class="win-btn">_</div>
                     <div class="win-btn">□</div>
-                    <div class="win-btn">X</div>
+                    <div class="win-btn close-btn" onclick="closeWindow('home')">X</div>
                 </div>
             </div>
             <div class="win-content home-center">
-                <h1 class="home-title">바탕화면에 오신것을 환영합니다<br>무엇이 궁금하신가요?</h1>
-                <div class="home-sub">
+                <h1 class="home-title glitch-target" data-original="바탕화면에 오신것을 환영합니다<br>무엇이 궁금하신가요?">바탕화면에 오신것을 환영합니다<br>무엇이 궁금하신가요?</h1>
+                <div class="home-sub glitch-target" data-original="하윤의 자기소개가 있는 개인 컴퓨터 입니다!">
                     하윤의 자기소개가 있는 개인 컴퓨터 입니다!
                 </div>
             </div>
         </section>
 
-        <!-- 👤 Profile -->
         <section id="profile" class="win-box">
             <div class="win-header">
-                <div class="win-title">👤 C:\Hayoon\Profile.txt</div>
-                <div class="win-controls"><div class="win-btn">X</div></div>
+                <div class="win-title">👤 Profile.txt</div>
+                <div class="win-controls"><div class="win-btn close-btn" onclick="closeWindow('profile')">X</div></div>
             </div>
             <div class="win-content">
-                <h2>👤 Profile</h2>
+                <h2 class="glitch-target" data-original="👤 Profile">👤 Profile</h2>
                 <div class="card">
                     <ul class="card-list">
-                        <li><b>이름:</b> 권하윤</li>
-                        <li><b>소속:</b> 고등학교 2학년 재학중</li>
-                        <li><b>관심분야:</b> 개발, AI, 게임, 기획</li>
-                        <li><b>취미:</b> 글쓰기, 그림그리기</li>
-                        <li><b>장점:</b> 성실함</li>
+                        <li class="glitch-target" data-original="이름: 권하윤"><b>이름:</b> 권하윤</li>
+                        <li class="glitch-target" data-original="소속: 고등학교 2학년 재학중"><b>소속:</b> 고등학교 2학년 재학중</li>
+                        <li class="glitch-target" data-original="관심분야: 개발, AI, 게임, 기획"><b>관심분야:</b> 개발, AI, 게임, 기획</li>
+                        <li class="glitch-target" data-original="취미: 글쓰기, 그림그리기"><b>취미:</b> 글쓰기, 그림그리기</li>
+                        <li class="glitch-target" data-original="장점: 성실함"><b>장점:</b> 성실함</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- 💻 Projects/Skills -->
         <section id="projects" class="win-box">
             <div class="win-header">
-                <div class="win-title">💻 C:\Hayoon\Projects_And_Skills.dll</div>
-                <div class="win-controls"><div class="win-btn">X</div></div>
+                <div class="win-title">💻 Projects.dll</div>
+                <div class="win-controls"><div class="win-btn close-btn" onclick="closeWindow('projects')">X</div></div>
             </div>
             <div class="win-content">
-                <h2>💻 Projects / Skills</h2>
+                <h2 class="glitch-target" data-original="💻 Projects / Skills">💻 Projects / Skills</h2>
                 <div class="card">
                     <ul class="card-list">
-                        <li><b>아두이노를 이용한 게임 개발</b> (방탈출, 과일악기, 미로찾기 등)</li>
-                        <li><b>자율주행 자동차 제작</b></li>
-                        <li><b>분리수거 시뮬레이션 사이트 제작 및 커뮤니티 제작</b></li>
-                        <li><b>스마트 시티 제작</b></li>
-                        <li><b>에어로젤을 이용한 패드 제작 및 단열압력 자체 개발</b></li>
-                        <li><b>Unity 3D를 이용한 시뮬레이션 제작</b> 등</li>
+                        <li class="glitch-target" data-original="아두이노를 이용한 게임 개발 (방탈출, 과일악기 등)"><b>아두이노를 이용한 게임 개발</b> (방탈출, 과일악기, 미로찾기 등)</li>
+                        <li class="glitch-target" data-original="자율주행 자동차 제작"><b>자율주행 자동차 제작</b></li>
+                        <li class="glitch-target" data-original="분리수거 시뮬레이션 사이트 제작"><b>분리수거 시뮬레이션 사이트 제작 및 커뮤니티 제작</b></li>
+                        <li class="glitch-target" data-original="스마트 시티 제작"><b>스마트 시티 제작</b></li>
+                        <li class="glitch-target" data-original="에어로젤 이용 패드 제작"><b>에어로젤을 이용한 패드 제작 및 단열압력 자체 개발</b></li>
+                        <li class="glitch-target" data-original="Unity 3D를 이용한 시뮬레이션 제작"><b>Unity 3D를 이용한 시뮬레이션 제작</b> 등</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- 🌱 Growth -->
         <section id="growth" class="win-box">
             <div class="win-header">
-                <div class="win-title">🌱 C:\Hayoon\Growth.log</div>
-                <div class="win-controls"><div class="win-btn">X</div></div>
+                <div class="win-title">🌱 Growth.log</div>
+                <div class="win-controls"><div class="win-btn close-btn" onclick="closeWindow('growth')">X</div></div>
             </div>
             <div class="win-content">
-                <h2>🌱 Growth</h2>
+                <h2 class="glitch-target" data-original="🌱 Growth">🌱 Growth</h2>
                 <div class="card">
                     <div class="growth-timeline">
-                        <div class="growth-step">초등학교</div>
+                        <div class="growth-step glitch-target" data-original="초등학교">초등학교</div>
                         <div class="growth-arrow">➔</div>
-                        <div class="growth-step">중학교</div>
+                        <div class="growth-step glitch-target" data-original="중학교">중학교</div>
                         <div class="growth-arrow">➔</div>
-                        <div class="growth-step" style="color: #1d4ed8;">고등학교 (재학)</div>
+                        <div class="growth-step glitch-target" style="color: #1d4ed8;" data-original="고등학교">고등학교</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 🎬 Play Lab (실제 동작하는 돌고래 다마고치 시스템) -->
         <section id="playlab" class="win-box">
             <div class="win-header">
-                <div class="win-title">🎬 C:\Hayoon\PlayLab_DolphinHelper.exe</div>
-                <div class="win-controls"><div class="win-btn">X</div></div>
+                <div class="win-title">🎬 DolphinHelper.exe</div>
+                <div class="win-controls"><div class="win-btn close-btn" onclick="closeWindow('playlab')">X</div></div>
             </div>
             <div class="win-content">
-                <h2>🎬 Play Lab</h2>
+                <h2 class="glitch-target" data-original="🎬 Play Lab">🎬 Play Lab</h2>
                 <div style="text-align: center; margin-bottom: 15px;">
-                    <b>🐬 컴퓨터 도우미 (돌고래) 키우기</b>
-                    <p style="font-size: 0.9rem; color: #666; margin-top: 4px;">먹이를 주고, 씻겨주고, 재워주며 돌고래 도우미를 관리해주세요!</p>
+                    <b class="glitch-target" data-original="🐬 컴퓨터 도우미 (돌고래) 키우기">🐬 컴퓨터 도우미 (돌고래) 키우기</b>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 4px;" id="pet-guide" class="glitch-target" data-original="먹이를 주고, 씻겨주고, 재워주며 돌고래 도우미를 관리해주세요!">먹이를 주고, 씻겨주고, 재워주며 돌고래 도우미를 관리해주세요!</p>
                 </div>
 
                 <div class="pet-container">
-                    <!-- 도우미 화면 -->
                     <div class="pet-screen">
                         <div id="pet-dialog" class="pet-dialog">큐우-! 안녕!</div>
                         <div class="dolphin-canvas">
@@ -542,23 +875,21 @@
                         </div>
                     </div>
 
-                    <!-- 상태 창 게이지 -->
                     <div class="pet-stats">
                         <div class="stat-row">
-                            <span>🐟 배부름 (포만감)</span>
+                            <span class="glitch-target" data-original="🐟 배부름">🐟 배부름</span>
                             <div class="stat-bar-bg"><div id="satiety-fill" class="stat-bar-fill"></div></div>
                         </div>
                         <div class="stat-row">
-                            <span>🧼 청결도</span>
+                            <span class="glitch-target" data-original="🧼 청결도">🧼 청결도</span>
                             <div class="stat-bar-bg"><div id="cleanliness-fill" class="stat-bar-fill"></div></div>
                         </div>
                         <div class="stat-row">
-                            <span>💤 체력 (수면)</span>
+                            <span class="glitch-target" data-original="💤 체력">💤 체력</span>
                             <div class="stat-bar-bg"><div id="energy-fill" class="stat-bar-fill"></div></div>
                         </div>
                     </div>
 
-                    <!-- 조작 버튼 -->
                     <div class="pet-controls">
                         <button class="pet-action-btn" onclick="feedPet()">🐟 먹이주기</button>
                         <button class="pet-action-btn" onclick="cleanPet()">🧼 씻기기</button>
@@ -568,42 +899,71 @@
             </div>
         </section>
 
-        <!-- ✉ Contact -->
         <section id="contact" class="win-box">
             <div class="win-header">
-                <div class="win-title">✉ C:\Hayoon\Contact.msg</div>
-                <div class="win-controls"><div class="win-btn">X</div></div>
+                <div class="win-title">✉ Contact.msg</div>
+                <div class="win-controls"><div class="win-btn close-btn" onclick="closeWindow('contact')">X</div></div>
             </div>
             <div class="win-content">
-                <h2>✉ Contact</h2>
+                <h2 class="glitch-target" data-original="✉ Contact">✉ Contact</h2>
                 <div class="card">
-                    <p style="margin-bottom: 10px;"><b>📱 Phone:</b> 010 - 6333 - 6770</p>
-                    <p><b>📧 Email:</b> khy01063336770@com</p>
+                    <p style="margin-bottom: 10px;" class="glitch-target" data-original="📱 Phone: 010 - 6333 - 6770"><b>📱 Phone:</b> 010 - 6333 - 6770</p>
+                    <p class="glitch-target" data-original="📧 Email: khy01063336770@com"><b>📧 Email:</b> khy01063336770@com</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 하단 윈도우 상태바 -->
+    <!-- 🔻 맨 아래로 스크롤해야 보이는 하단 바 -->
     <footer>
-        <div class="start-btn">
+        <div class="start-btn" id="start-btn" onclick="handleStartClick()">
             <span>☁️</span> 시작 (Start)
         </div>
-        <div>
-            <span>Hayoon Desktop OS v2.0 | <span id="clock">00:00 AM</span></span>
+
+        <div class="system-tray">
+            <button class="settings-btn" onclick="toggleSettings()">▲</button>
+            <span id="clock">00:00 AM</span>
+
+            <!-- ⚙️ 설정 창 -->
+            <div id="settings-popup" class="settings-popup">
+                <div style="font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 6px;">⚙️ 환경 설정</div>
+                <div class="setting-row">
+                    <span>돌고래 흑화 이벤트</span>
+                    <input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)">
+                </div>
+            </div>
         </div>
     </footer>
 
     <script>
-        // 1. 자동 스크롤 함수
-        function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
+        let isHorrorEnabled = false; // 기본 설정: 꺼짐
+
+        function toggleNavMenu() {
+            const nav = document.getElementById('nav-menu');
+            nav.classList.toggle('active');
+        }
+
+        function toggleSettings() {
+            const popup = document.getElementById('settings-popup');
+            popup.classList.toggle('active');
+        }
+
+        function toggleHorrorSetting(enabled) {
+            isHorrorEnabled = enabled;
+            if (!enabled && isHorrorMode) {
+                resetToNormal();
             }
         }
 
-        // 2. 상단 스크롤 진행 바
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element && element.style.display !== 'none') {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+            // 모바일 메뉴 닫기
+            document.getElementById('nav-menu').classList.remove('active');
+        }
+
         window.onscroll = function() {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -611,7 +971,6 @@
             document.getElementById("progress-bar").style.width = scrolled + "%";
         };
 
-        // 3. 디지털 시계
         function updateClock() {
             const now = new Date();
             let hours = now.getHours();
@@ -625,54 +984,192 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 4. 🐬 도우미 키우기 (다마고치 인터랙션 로직)
-        let petStats = {
-            satiety: 70,
-            cleanliness: 60,
-            energy: 80
-        };
+        let petStats = { satiety: 20, cleanliness: 20, energy: 20 };
+        let isHorrorMode = false;
+        let restartClickCount = 0;
+        let openWindowsCount = 6;
+
+        const glitchChars = "̷̶̵̶̸̶̵̷̸̷̶̵̸̸̷̷̷̸̷̷01#%&*@!$/\\";
+        function makeGlitchedText(text) {
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                if (Math.random() > 0.4) {
+                    result += glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                } else {
+                    result += text[i];
+                }
+            }
+            return result;
+        }
+
+        const horrorBaseDialogs = [
+            "왜 나를 방치했어...",
+            "빛이 닿지 않는 곳으로...",
+            "너도 나와 함께 깊은 곳으로...",
+            "너 뒤에 누군가 서있어...",
+            "눈을 감아도 널 보고 있어..."
+        ];
 
         function updatePetUI() {
             document.getElementById('satiety-fill').style.width = petStats.satiety + '%';
             document.getElementById('cleanliness-fill').style.width = petStats.cleanliness + '%';
             document.getElementById('energy-fill').style.width = petStats.energy + '%';
+
+            if (isHorrorEnabled && petStats.satiety <= 0 && petStats.cleanliness <= 0 && petStats.energy <= 0 && !isHorrorMode) {
+                triggerHorrorMode();
+            }
         }
 
-        function setPetDialog(text, emoji = "🐬") {
+        function setPetDialog(text, isGlitch = false) {
             const dialog = document.getElementById('pet-dialog');
+            if (isGlitch) {
+                dialog.innerText = makeGlitchedText(text);
+                dialog.classList.add('glitch-active');
+            } else {
+                dialog.innerText = text;
+                dialog.classList.remove('glitch-active');
+            }
+        }
+
+        function triggerHorrorMode() {
+            isHorrorMode = true;
+            restartClickCount = 0;
+            document.body.classList.add('horro-mode');
+            
             const char = document.getElementById('dolphin-char');
-            dialog.innerText = text;
-            char.innerText = emoji;
-            setTimeout(() => {
-                char.innerText = "🐬";
-            }, 1500);
+            char.innerText = "";
+            char.classList.add('black-square');
+            
+            document.querySelectorAll('.glitch-target').forEach(el => {
+                const orig = el.getAttribute('data-original');
+                el.innerText = makeGlitchedText(orig);
+                el.classList.add('glitch-active');
+            });
+
+            const randomBase = horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)];
+            setPetDialog(randomBase, true);
+
+            updateStartButtonText();
+        }
+
+        function closeWindow(id) {
+            const target = document.getElementById(id);
+            if (target && target.style.display !== 'none') {
+                target.style.display = 'none';
+                openWindowsCount--;
+
+                if (isHorrorMode && openWindowsCount <= 0) {
+                    document.getElementById('black-door').style.display = 'flex';
+                }
+            }
+        }
+
+        function triggerBSOD() {
+            document.getElementById('bsod-screen').style.display = 'flex';
+        }
+
+        function resetFromBSOD() {
+            document.getElementById('bsod-screen').style.display = 'none';
+            resetToNormal();
+        }
+
+        function updateStartButtonText() {
+            const startBtn = document.getElementById('start-btn');
+            if (isHorrorMode) {
+                const remaining = 5 - restartClickCount;
+                startBtn.innerHTML = `<span>🔄</span> 재시작 (${remaining}/5)`;
+            } else {
+                startBtn.innerHTML = `<span>☁️</span> 시작 (Start)`;
+            }
+        }
+
+        function handleStartClick() {
+            if (!isHorrorMode) return;
+
+            restartClickCount++;
+            updateStartButtonText();
+
+            if (restartClickCount >= 5) {
+                resetToNormal();
+            } else {
+                const randomBase = horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)];
+                setPetDialog(randomBase, true);
+
+                document.querySelectorAll('.glitch-target').forEach(el => {
+                    const orig = el.getAttribute('data-original');
+                    el.innerText = makeGlitchedText(orig);
+                });
+            }
+        }
+
+        function resetToNormal() {
+            isHorrorMode = false;
+            restartClickCount = 0;
+            document.body.classList.remove('horro-mode');
+
+            document.getElementById('black-door').style.display = 'none';
+
+            document.querySelectorAll('.win-box').forEach(el => el.style.display = 'block');
+            openWindowsCount = 6;
+
+            const char = document.getElementById('dolphin-char');
+            char.classList.remove('black-square');
+            char.innerText = "🐬";
+
+            petStats = { satiety: 50, cleanliness: 50, energy: 50 };
+            updatePetUI();
+
+            document.querySelectorAll('.glitch-target').forEach(el => {
+                const orig = el.getAttribute('data-original');
+                el.innerHTML = orig;
+                el.classList.remove('glitch-active');
+            });
+
+            setPetDialog("큐우-! 다시 원래대로 돌아왔어!", false);
+            updateStartButtonText();
         }
 
         function feedPet() {
+            if (isHorrorMode) {
+                const randomBase = horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)];
+                setPetDialog(randomBase, true);
+                return;
+            }
             petStats.satiety = Math.min(100, petStats.satiety + 25);
             updatePetUI();
-            setPetDialog("냠냠! 맛있는 물고기 고마워! 🐟", "🐬");
+            setPetDialog("냠냠! 맛있는 물고기 고마워! 🐟");
         }
 
         function cleanPet() {
+            if (isHorrorMode) {
+                const randomBase = horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)];
+                setPetDialog(randomBase, true);
+                return;
+            }
             petStats.cleanliness = Math.min(100, petStats.cleanliness + 30);
             updatePetUI();
-            setPetDialog("뽀득뽀득! 몸이 깨끗해졌어~ 🫧", "💦");
+            setPetDialog("뽀득뽀득! 몸이 깨끗해졌어~ 🫧");
         }
 
         function sleepPet() {
+            if (isHorrorMode) {
+                const randomBase = horrorBaseDialogs[Math.floor(Math.random() * horrorBaseDialogs.length)];
+                setPetDialog(randomBase, true);
+                return;
+            }
             petStats.energy = Math.min(100, petStats.energy + 35);
             updatePetUI();
-            setPetDialog("쿨쿨... 체력이 회복되었어! 💤", "😴");
+            setPetDialog("쿨쿨... 체력이 회복되었어! 💤");
         }
 
-        // 시간에 따른 자연 감소
         setInterval(() => {
-            petStats.satiety = Math.max(0, petStats.satiety - 2);
-            petStats.cleanliness = Math.max(0, petStats.cleanliness - 1);
-            petStats.energy = Math.max(0, petStats.energy - 1);
-            updatePetUI();
-        }, 3000);
+            if (!isHorrorMode && isHorrorEnabled) {
+                petStats.satiety = Math.max(0, petStats.satiety - 5);
+                petStats.cleanliness = Math.max(0, petStats.cleanliness - 5);
+                petStats.energy = Math.max(0, petStats.energy - 5);
+                updatePetUI();
+            }
+        }, 2000);
 
         updatePetUI();
     </script>
