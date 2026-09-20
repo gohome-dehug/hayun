@@ -51,31 +51,7 @@
         .win-header { background: var(--win-header-bg); padding: 6px 12px; display: flex; justify-content: space-between; font-weight: bold; color: var(--win-text); }
         .win-content { padding: 20px; line-height: 1.8; }
         h2 { font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px dashed #76C457; padding-bottom: 6px; }
-
-        /* 공포 모드 스타일 */
-        .horror-container { display: flex; flex-direction: column; align-items: center; gap: 15px; background: #1a0505; border: 2px solid #8b0000; padding: 15px; border-radius: 8px; color: #ff4d4d; }
-        .horror-screen { width: 100%; max-width: 280px; height: 180px; background: #000000; border: 3px solid #ff0000; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .horror-dialog { position: absolute; top: 10px; font-size: 0.8rem; background: #2b0000; padding: 4px 10px; border-radius: 6px; border: 1px solid #ff0000; color: #ff3333; text-align: center; }
-        .horror-char-box { width: 120px; height: 80px; display: flex; justify-content: center; align-items: center; }
-        .horror-char { font-size: 60px; user-select: none; animation: glitch 0.2s infinite alternate; }
-        
-        @keyframes glitch {
-            0% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg); }
-            50% { transform: translate(-2px, 2px) scale(1.05); filter: invert(0.2); }
-            100% { transform: translate(2px, -2px) scale(0.98); filter: hue-rotate(90deg); }
-        }
-
-        .pet-stats { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 8px; }
-        .stat-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #ffaaaa; }
-        .stat-bar-bg { width: 55%; height: 12px; background: #331111; border-radius: 6px; overflow: hidden; border: 1px solid #8b0000; }
-        .stat-bar-fill { height: 100%; transition: width 0.3s ease; }
-        #satiety-fill { background-color: #ff0055; }
-        #cleanliness-fill { background-color: #9900ff; }
-        #energy-fill { background-color: #ff3300; }
-        .pet-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-        .pet-action-btn { background: #330000; border: 2px solid; border-color: #ff3333 #550000 #550000 #ff3333; padding: 6px 12px; font-size: 0.85rem; cursor: pointer; color: #ffcccc; }
-        .pet-action-btn:hover { background: #660000; color: #ffffff; }
-
+        .card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 14px; border-radius: 4px; }
         footer { background: var(--footer-bg); border-top: 2px solid var(--border-dark); padding: 8px 20px; font-size: 0.85rem; display: flex; justify-content: space-between; position: fixed; bottom: 0; width: 100%; z-index: 1000; color: var(--header-text); }
         footer.footer-mobile-mode { position: relative !important; margin-top: auto !important; bottom: auto !important; }
         .start-btn { background: var(--btn-bg); border: 2px solid; border-color: #fff #808080 #808080 #fff; padding: 4px 10px; font-weight: bold; }
@@ -84,7 +60,6 @@
         .settings-popup.active { display: flex; }
         .setting-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
         .setting-row select { background: var(--btn-bg); color: var(--win-text); border: 1px solid var(--border-dark); padding: 2px; }
-
         @media (max-width: 768px) {
             .hamburger-btn { display: block; }
             .navbar { display: none; flex-direction: column; width: 100%; position: absolute; top: 100%; left: 0; background: var(--header-bg); border-bottom: 2px solid var(--border-dark); padding: 10px; gap: 6px; }
@@ -111,31 +86,11 @@
     </header>
     <main>
         <section class="win-box">
-            <div class="win-header"><div class="win-title">🎬 Terror_OS.exe</div></div>
+            <div class="win-header"><div class="win-title">🎬 PlayLab.exe</div></div>
             <div class="win-content">
-                <h2>🎬 Play Lab (공포 모드)</h2>
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <b style="color: #ff3333;">👁️ 저주받은 컴퓨터 인공지능 실험실</b>
-                    <p style="font-size: 0.85rem; color: #ff8888; margin-top: 4px;">알 수 없는 존재가 컴퓨터 속에 갇혀있습니다... 욕구를 충족시키지 못하면 위험해집니다.</p>
-                </div>
-
-                <div class="horror-container">
-                    <div class="horror-screen">
-                        <div id="horror-dialog" class="horror-dialog">나를... 날 바라봐...</div>
-                        <div class="horror-char-box"><div id="horror-char" class="horror-char">👹</div></div>
-                    </div>
-
-                    <div class="pet-stats">
-                        <div class="stat-row"><span>🥩 피의 욕구</span><div class="stat-bar-bg"><div id="satiety-fill" class="stat-bar-fill"></div></div></div>
-                        <div class="stat-row"><span>🩸 영혼의 정화</span><div class="stat-bar-bg"><div id="cleanliness-fill" class="stat-bar-fill"></div></div></div>
-                        <div class="stat-row"><span>⚡ 저주 파동</span><div class="stat-bar-bg"><div id="energy-fill" class="stat-bar-fill"></div></div></div>
-                    </div>
-
-                    <div class="pet-controls">
-                        <button class="pet-action-btn" onclick="feedPet()">🥩 제물 바치기</button>
-                        <button class="pet-action-btn" onclick="cleanPet()">🩸 피 씻어내기</button>
-                        <button class="pet-action-btn" onclick="sleepPet()">⚡ 의식 치르기</button>
-                    </div>
+                <h2>🎬 Play Lab</h2>
+                <div class="card">
+                    <p>실험적인 프로젝트나 미디어 창작물을 전시하는 공간입니다.</p>
                 </div>
             </div>
         </section>
@@ -168,7 +123,6 @@
     <script>
         function toggleNavMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
         function toggleSettings() { document.getElementById('settings-popup').classList.toggle('active'); }
-        
         function changeThemeMode(theme) {
             if (theme === 'dark') { document.body.classList.add('dark-theme'); localStorage.setItem('hayoon_theme', 'dark'); }
             else { document.body.classList.remove('dark-theme'); localStorage.setItem('hayoon_theme', 'light'); }
@@ -178,7 +132,6 @@
             document.getElementById('theme-select').value = savedTheme;
             changeThemeMode(savedTheme);
         }
-
         function changeLayoutMode(mode) {
             const footer = document.getElementById('main-footer');
             if (mode === 'mobile') footer.classList.add('footer-mobile-mode');
@@ -194,43 +147,6 @@
         window.addEventListener('resize', applyAutoLayout);
         applyAutoLayout();
         loadTheme();
-
-        // 공포 모드 로직
-        let petStats = { satiety: 30, cleanliness: 30, energy: 30 };
-        const horrorDialogs = [
-            "크크크... 더 많은 제물을...!",
-            "피가 모자라... 날 버리지 마...",
-            "컴퓨터 화면 너머의 네가 보여...",
-            "의식이 완벽해지고 있어..."
-        ];
-
-        function updatePetUI() {
-            document.getElementById('satiety-fill').style.width = petStats.satiety + '%';
-            document.getElementById('cleanliness-fill').style.width = petStats.cleanliness + '%';
-            document.getElementById('energy-fill').style.width = petStats.energy + '%';
-            
-            if(petStats.satiety > 70) document.getElementById('horror-char').innerText = "💀";
-            else if(petStats.satiety > 40) document.getElementById('horror-char').innerText = "👹";
-            else document.getElementById('horror-char').innerText = "👻";
-        }
-
-        function feedPet() {
-            petStats.satiety = Math.min(100, petStats.satiety + 25);
-            updatePetUI();
-            document.getElementById('horror-dialog').innerText = "크윽... 붉은 제물 맛이 아주 좋구나...🥩";
-        }
-        function cleanPet() {
-            petStats.cleanliness = Math.min(100, petStats.cleanliness + 30);
-            updatePetUI();
-            document.getElementById('horror-dialog').innerText = "어둠의 기운이 더욱 선명해진다...🩸";
-        }
-        function sleepPet() {
-            petStats.energy = Math.min(100, petStats.energy + 35);
-            updatePetUI();
-            document.getElementById('horror-dialog').innerText = "저주가 증폭된다... 크크크...⚡";
-        }
-        updatePetUI();
-
         function updateClock() {
             const now = new Date();
             let hours = now.getHours(), minutes = now.getMinutes();
