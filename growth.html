@@ -8,6 +8,7 @@
 </head>
 <body>
     <div id="bg-entity"></div>
+
     <header>
         <div class="header-container">
             <div class="header-logo">💻 Hayoon OS</div>
@@ -27,7 +28,7 @@
         <section class="win-box">
             <div class="win-header">
                 <div class="win-title">🌱 Growth.log</div>
-                <div class="win-controls"><div class="win-btn close-btn" onclick="location.href='index.html'">X</div></div>
+                <div class="win-controls"><div class="win-btn close-btn" onclick="closePage()">X</div></div>
             </div>
             <div class="win-content">
                 <h2 class="glitch-target" data-original="🌱 Growth">🌱 Growth</h2>
@@ -45,13 +46,18 @@
     </main>
 
     <footer id="main-footer">
-        <div class="start-btn" id="start-btn" onclick="handleStartClick()"><span>☁️</span> 시작 (Start)</div>
+        <div class="start-btn" id="start-btn" onclick="handleStartClick()">
+            <span>☁️</span> 시작 (Start)
+        </div>
         <div class="system-tray">
             <button class="settings-btn" onclick="toggleSettings()">▲</button>
             <span id="clock">00:00 AM</span>
             <div id="settings-popup" class="settings-popup">
-                <div style="font-weight: bold; border-bottom: 1px solid #ccc;">⚙️ 환경 설정</div>
-                <div class="setting-row"><span>공포 모드</span><input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)"></div>
+                <div style="font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">⚙️ 환경 설정</div>
+                <div class="setting-row">
+                    <span>공포 모드</span>
+                    <input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)">
+                </div>
             </div>
         </div>
     </footer>
@@ -60,6 +66,7 @@
         let isHorrorEnabled = localStorage.getItem('horrorEnabled') === 'true';
         let isHorrorMode = localStorage.getItem('horrorMode') === 'true';
         let restartClickCount = parseInt(localStorage.getItem('restartClickCount') || '0', 10);
+
         const glitchChars = "̷̶̵̶̸̶̵̷̸̷̶̵̸̸̷̷̷̸̷̷01#%&*@!$/\\";
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -80,23 +87,30 @@
             const clock = document.getElementById('clock');
             if (!clock) return;
             const now = new Date();
-            let hours = now.getHours(), minutes = now.getMinutes();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
             const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12; minutes = minutes < 10 ? '0' + minutes : minutes;
+            hours = hours % 12 || 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
             clock.innerText = `${hours}:${minutes} ${ampm}`;
         }
 
         function makeGlitchedText(text) {
-            let res = "";
-            for (let i = 0; i < text.length; i++) res += Math.random() > 0.4 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : text[i];
-            return res;
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                result += Math.random() > 0.4 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : text[i];
+            }
+            return result;
         }
 
         function applyHorrorUI() {
             document.body.classList.add('horro-mode');
             document.querySelectorAll('.glitch-target').forEach(el => {
                 const orig = el.getAttribute('data-original');
-                if (orig) { el.innerText = makeGlitchedText(orig); el.classList.add('glitch-active'); }
+                if (orig) {
+                    el.innerText = makeGlitchedText(orig);
+                    el.classList.add('glitch-active');
+                }
             });
             updateStartButtonText();
         }
@@ -112,21 +126,30 @@
         function updateStartButtonText() {
             const startBtn = document.getElementById('start-btn');
             if (!startBtn) return;
-            startBtn.innerHTML = isHorrorMode ? `<span>🔄</span> 재시작 (${5 - restartClickCount}/5)` : `<span>☁️</span> 시작 (Start)`;
+            if (isHorrorMode) {
+                startBtn.innerHTML = `<span>🔄</span> 재시작 (${5 - restartClickCount}/5)`;
+            } else {
+                startBtn.innerHTML = `<span>☁️</span> 시작 (Start)`;
+            }
         }
 
         function resetToNormal() {
-            isHorrorMode = false; restartClickCount = 0;
+            isHorrorMode = false;
+            restartClickCount = 0;
             localStorage.setItem('horrorMode', 'false');
             localStorage.setItem('restartClickCount', '0');
             document.body.classList.remove('horro-mode');
             document.querySelectorAll('.glitch-target').forEach(el => {
                 const orig = el.getAttribute('data-original');
-                if (orig) { el.innerHTML = orig; el.classList.remove('glitch-active'); }
+                if (orig) {
+                    el.innerHTML = orig;
+                    el.classList.remove('glitch-active');
+                }
             });
             updateStartButtonText();
         }
 
+        function closePage() { window.location.href = "index.html"; }
         function toggleNavMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
         function toggleSettings() { document.getElementById('settings-popup').classList.toggle('active'); }
     </script>
