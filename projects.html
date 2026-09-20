@@ -1,157 +1,31 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - 하윤의 바탕화면</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>MY RETRO OS - PROJECTS</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="bg-entity"></div>
 
-    <header>
-        <div class="header-container">
-            <div class="header-logo">💻 Hayoon OS</div>
-            <button class="hamburger-btn" onclick="toggleNavMenu()">☰</button>
-            <nav class="navbar" id="nav-menu">
-                <a href="index.html" class="nav-item">🏠 Home</a>
-                <a href="profile.html" class="nav-item active">👤 Profile</a>
-                <a href="projects.html" class="nav-item">💻 Projects</a>
-                <a href="growth.html" class="nav-item">🌱 Growth</a>
-                <a href="playlab.html" class="nav-item">🎬 Play Lab</a>
-                <a href="contact.html" class="nav-item">✉ Contact</a>
-            </nav>
-        </div>
-    </header>
+  <nav class="retro-nav">
+    <a href="index.html">Home</a>
+    <a href="profile.html">Profile</a>
+    <a href="projects.html" class="active">Projects</a>
+    <a href="playlab.html">Play Lab</a>
+  </nav>
 
-    <main>
-        <section class="win-box">
-            <div class="win-header">
-                <div class="win-title">👤 Profile.txt</div>
-                <div class="win-controls"><div class="win-btn close-btn" onclick="closePage()">X</div></div>
-            </div>
-            <div class="win-content">
-                <h2 class="glitch-target" data-original="👤 Profile">👤 Profile</h2>
-                <div class="card">
-                    <ul class="card-list">
-                        <li class="glitch-target" data-original="이름: 권하윤"><b>이름:</b> 권하윤</li>
-                        <li class="glitch-target" data-original="소속: 고등학교 2학년 재학중"><b>소속:</b> 고등학교 2학년 재학중</li>
-                        <li class="glitch-target" data-original="관심분야: 개발, AI, 게임, 기획"><b>관심분야:</b> 개발, AI, 게임, 기획</li>
-                        <li class="glitch-target" data-original="취미: 글쓰기, 그림그리기"><b>취미:</b> 글쓰기, 그림그리기</li>
-                        <li class="glitch-target" data-original="장점: 성실함"><b>장점:</b> 성실함</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-    </main>
+  <main class="window">
+    <div class="title-bar">
+      <span>C:\PROJECTS\LIST.DOC</span>
+    </div>
+    <div class="window-body">
+      <h2>MY PROJECTS</h2>
+      <ul style="margin-top: 10px; padding-left: 20px;">
+        <li>레트로 OS 웹 포트폴리오</li>
+        <li>다마고치 펫 키우기 게임</li>
+      </ul>
+    </div>
+  </main>
 
-    <footer id="main-footer">
-        <div class="start-btn" id="start-btn" onclick="handleStartClick()">
-            <span>☁️</span> 시작 (Start)
-        </div>
-        <div class="system-tray">
-            <button class="settings-btn" onclick="toggleSettings()">▲</button>
-            <span id="clock">00:00 AM</span>
-            <div id="settings-popup" class="settings-popup">
-                <div style="font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">⚙️ 환경 설정</div>
-                <div class="setting-row">
-                    <span>공포 모드</span>
-                    <input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)">
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        let isHorrorEnabled = localStorage.getItem('horrorEnabled') === 'true';
-        let isHorrorMode = localStorage.getItem('horrorMode') === 'true';
-        let restartClickCount = parseInt(localStorage.getItem('restartClickCount') || '0', 10);
-
-        const glitchChars = "̷̶̵̶̸̶̵̷̸̷̶̵̸̸̷̷̷̸̷̷01#%&*@!$/\\";
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const toggleHorror = document.getElementById('toggle-horror');
-            if (toggleHorror) toggleHorror.checked = isHorrorEnabled;
-            if (isHorrorMode) applyHorrorUI();
-            updateClock();
-            setInterval(updateClock, 1000);
-        });
-
-        function toggleHorrorSetting(enabled) {
-            isHorrorEnabled = enabled;
-            localStorage.setItem('horrorEnabled', enabled);
-            if (!enabled && isHorrorMode) resetToNormal();
-        }
-
-        function updateClock() {
-            const clock = document.getElementById('clock');
-            if (!clock) return;
-            const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            clock.innerText = `${hours}:${minutes} ${ampm}`;
-        }
-
-        function makeGlitchedText(text) {
-            let result = "";
-            for (let i = 0; i < text.length; i++) {
-                result += Math.random() > 0.4 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : text[i];
-            }
-            return result;
-        }
-
-        function applyHorrorUI() {
-            document.body.classList.add('horro-mode');
-            document.querySelectorAll('.glitch-target').forEach(el => {
-                const orig = el.getAttribute('data-original');
-                if (orig) {
-                    el.innerText = makeGlitchedText(orig);
-                    el.classList.add('glitch-active');
-                }
-            });
-            updateStartButtonText();
-        }
-
-        function handleStartClick() {
-            if (!isHorrorMode) return;
-            restartClickCount++;
-            localStorage.setItem('restartClickCount', restartClickCount);
-            updateStartButtonText();
-            if (restartClickCount >= 5) resetToNormal();
-        }
-
-        function updateStartButtonText() {
-            const startBtn = document.getElementById('start-btn');
-            if (!startBtn) return;
-            if (isHorrorMode) {
-                startBtn.innerHTML = `<span>🔄</span> 재시작 (${5 - restartClickCount}/5)`;
-            } else {
-                startBtn.innerHTML = `<span>☁️</span> 시작 (Start)`;
-            }
-        }
-
-        function resetToNormal() {
-            isHorrorMode = false;
-            restartClickCount = 0;
-            localStorage.setItem('horrorMode', 'false');
-            localStorage.setItem('restartClickCount', '0');
-            document.body.classList.remove('horro-mode');
-            document.querySelectorAll('.glitch-target').forEach(el => {
-                const orig = el.getAttribute('data-original');
-                if (orig) {
-                    el.innerHTML = orig;
-                    el.classList.remove('glitch-active');
-                }
-            });
-            updateStartButtonText();
-        }
-
-        function closePage() { window.location.href = "index.html"; }
-        function toggleNavMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
-        function toggleSettings() { document.getElementById('settings-popup').classList.toggle('active'); }
-    </script>
 </body>
 </html>
