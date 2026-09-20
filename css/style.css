@@ -96,3 +96,9 @@ body {
   border-bottom-color: #fff;
   background: #fff;
 }
+
+.timeline-item {
+  margin-bottom: 15px;
+  padding-left: 10px;
+  border-left: 2px dashed #000;
+}
