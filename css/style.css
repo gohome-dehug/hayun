@@ -11,18 +11,18 @@
 }
 
 body {
-  background-color: #008080; /* 레트로 윈도우 배경색 */
+  background-color: #008080;
   padding: 20px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* 상단 네비게이션 바 */
 .retro-nav {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .retro-nav a {
@@ -43,7 +43,6 @@ body {
   border-bottom-color: #fff;
 }
 
-/* 윈도우 창 스타일 */
 .window {
   background: #c0c0c0;
   border: 2px solid #fff;
@@ -68,7 +67,6 @@ body {
   padding: 20px;
 }
 
-/* 레트로 버튼 */
 .retro-btn {
   padding: 6px 12px;
   background: #c0c0c0;
@@ -82,4 +80,19 @@ body {
   border: 2px solid #000;
   border-right-color: #fff;
   border-bottom-color: #fff;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.form-group input, .form-group textarea {
+  padding: 6px;
+  border: 2px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  background: #fff;
 }
