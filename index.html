@@ -9,13 +9,15 @@
 <body>
     <div id="bg-entity"></div>
 
-    <div id="black-door" onclick="triggerBSOD()"><span style="color: #ef4444;">ENTER</span></div>
+    <div id="black-door" onclick="triggerBSOD()" title="문 클릭" style="display:none;">
+        <span style="color: #ef4444; font-size: 0.8rem; text-align: center;">ENTER</span>
+    </div>
 
-    <div id="bsod-screen" onclick="resetFromBSOD()">
-        <h1 style="font-size: 60px;">:(</h1>
-        <p>PC에 문제가 발생하여 다시 시작해야 합니다.</p>
+    <div id="bsod-screen" onclick="resetFromBSOD()" style="display:none;">
+        <h1>:(</h1>
+        <p>PC에 문제가 발생하여 다시 시작해야 합니다.<br>일부 오류 정보를 수집하고 있습니다.</p>
         <p style="font-size: 14px; margin-top: 20px;">중지 코드: CRITICAL_PROCESS_DIED</p>
-        <p style="font-size: 13px; opacity: 0.8; margin-top: 30px;">(클릭하여 시스템 복구)</p>
+        <p style="font-size: 13px; opacity: 0.8; margin-top: 30px;">(화면을 클릭하면 시스템을 복구합니다)</p>
     </div>
 
     <header>
@@ -37,23 +39,32 @@
         <section class="win-box">
             <div class="win-header">
                 <div class="win-title">💾 Welcome.exe</div>
-                <div class="win-controls"><div class="win-btn close-btn" onclick="closePage()">X</div></div>
+                <div class="win-controls">
+                    <div class="win-btn close-btn" onclick="closePage()">X</div>
+                </div>
             </div>
             <div class="win-content home-center">
                 <h1 class="home-title glitch-target" data-original="바탕화면에 오신것을 환영합니다<br>무엇이 궁금하신가요?">바탕화면에 오신것을 환영합니다<br>무엇이 궁금하신가요?</h1>
-                <div class="home-sub glitch-target" data-original="하윤의 자기소개가 있는 개인 컴퓨터 입니다!">하윤의 자기소개가 있는 개인 컴퓨터 입니다!</div>
+                <div class="home-sub glitch-target" data-original="하윤의 자기소개가 있는 개인 컴퓨터 입니다!">
+                    하윤의 자기소개가 있는 개인 컴퓨터 입니다!
+                </div>
             </div>
         </section>
     </main>
 
     <footer id="main-footer">
-        <div class="start-btn" id="start-btn" onclick="handleStartClick()"><span>☁️</span> 시작 (Start)</div>
+        <div class="start-btn" id="start-btn" onclick="handleStartClick()">
+            <span>☁️</span> 시작 (Start)
+        </div>
         <div class="system-tray">
             <button class="settings-btn" onclick="toggleSettings()">▲</button>
             <span id="clock">00:00 AM</span>
             <div id="settings-popup" class="settings-popup">
-                <div style="font-weight: bold; border-bottom: 1px solid #ccc;">⚙️ 환경 설정</div>
-                <div class="setting-row"><span>공포 모드</span><input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)"></div>
+                <div style="font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">⚙️ 환경 설정</div>
+                <div class="setting-row">
+                    <span>공포 모드</span>
+                    <input type="checkbox" id="toggle-horror" onchange="toggleHorrorSetting(this.checked)">
+                </div>
             </div>
         </div>
     </footer>
@@ -63,8 +74,15 @@
         let isHorrorMode = localStorage.getItem('horrorMode') === 'true';
         let restartClickCount = parseInt(localStorage.getItem('restartClickCount') || '0', 10);
         let petStats = JSON.parse(localStorage.getItem('petStats')) || { satiety: 20, cleanliness: 20, energy: 20 };
+
         const glitchChars = "̷̶̵̶̸̶̵̷̸̷̶̵̸̸̷̷̷̸̷̷01#%&*@!$/\\";
-        const horrorDialogs = ["왜 나를 방치했어...", "빛이 닿지 않는 곳으로...", "너 뒤에 누군가 서있어..."];
+        const horrorBaseDialogs = [
+            "왜 나를 방치했어...",
+            "빛이 닿지 않는 곳으로...",
+            "너도 나와 함께 깊은 곳으로...",
+            "너 뒤에 누군가 서있어...",
+            "눈을 감아도 널 보고 있어..."
+        ];
 
         document.addEventListener("DOMContentLoaded", () => {
             const toggleHorror = document.getElementById('toggle-horror');
@@ -84,7 +102,8 @@
             const clock = document.getElementById('clock');
             if (!clock) return;
             const now = new Date();
-            let hours = now.getHours(), minutes = now.getMinutes();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
             const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12 || 12;
             minutes = minutes < 10 ? '0' + minutes : minutes;
@@ -92,16 +111,21 @@
         }
 
         function makeGlitchedText(text) {
-            let res = "";
-            for (let i = 0; i < text.length; i++) res += Math.random() > 0.4 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : text[i];
-            return res;
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                result += Math.random() > 0.4 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : text[i];
+            }
+            return result;
         }
 
         function applyHorrorUI() {
             document.body.classList.add('horro-mode');
             document.querySelectorAll('.glitch-target').forEach(el => {
                 const orig = el.getAttribute('data-original');
-                if (orig) { el.innerText = makeGlitchedText(orig); el.classList.add('glitch-active'); }
+                if (orig) {
+                    el.innerText = makeGlitchedText(orig);
+                    el.classList.add('glitch-active');
+                }
             });
             updateStartButtonText();
         }
@@ -117,11 +141,16 @@
         function updateStartButtonText() {
             const startBtn = document.getElementById('start-btn');
             if (!startBtn) return;
-            startBtn.innerHTML = isHorrorMode ? `<span>🔄</span> 재시작 (${5 - restartClickCount}/5)` : `<span>☁️</span> 시작 (Start)`;
+            if (isHorrorMode) {
+                startBtn.innerHTML = `<span>🔄</span> 재시작 (${5 - restartClickCount}/5)`;
+            } else {
+                startBtn.innerHTML = `<span>☁️</span> 시작 (Start)`;
+            }
         }
 
         function resetToNormal() {
-            isHorrorMode = false; restartClickCount = 0;
+            isHorrorMode = false;
+            restartClickCount = 0;
             localStorage.setItem('horrorMode', 'false');
             localStorage.setItem('restartClickCount', '0');
             document.body.classList.remove('horro-mode');
@@ -131,7 +160,10 @@
             localStorage.setItem('petStats', JSON.stringify(petStats));
             document.querySelectorAll('.glitch-target').forEach(el => {
                 const orig = el.getAttribute('data-original');
-                if (orig) { el.innerHTML = orig; el.classList.remove('glitch-active'); }
+                if (orig) {
+                    el.innerHTML = orig;
+                    el.classList.remove('glitch-active');
+                }
             });
             updateStartButtonText();
         }
@@ -143,10 +175,24 @@
             }
         }
 
-        function triggerBSOD() { document.getElementById('bsod-screen').style.display = 'flex'; }
-        function resetFromBSOD() { document.getElementById('bsod-screen').style.display = 'none'; resetToNormal(); }
-        function toggleNavMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
-        function toggleSettings() { document.getElementById('settings-popup').classList.toggle('active'); }
+        function triggerBSOD() {
+            const bsod = document.getElementById('bsod-screen');
+            if (bsod) bsod.style.display = 'flex';
+        }
+
+        function resetFromBSOD() {
+            const bsod = document.getElementById('bsod-screen');
+            if (bsod) bsod.style.display = 'none';
+            resetToNormal();
+        }
+
+        function toggleNavMenu() {
+            document.getElementById('nav-menu').classList.toggle('active');
+        }
+
+        function toggleSettings() {
+            document.getElementById('settings-popup').classList.toggle('active');
+        }
     </script>
 </body>
 </html>
